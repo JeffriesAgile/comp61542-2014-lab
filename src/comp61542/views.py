@@ -1,7 +1,9 @@
+from flask import (render_template, request)
+
 from comp61542 import app
+from comp61542.visualization import network
 from database import database
-from visualization import network
-from flask import (render_template, request, send_file)
+
 
 def format_data(data):
     fmt = "%.2f"
