@@ -223,6 +223,24 @@ class Database:
             for i in range(len(astats)) ]
         return (header, data)
 
+    def get_author_statistics(self):
+        header = ("Author", "Number of \"hands-on\" researches",
+            "Number of projects managed", "Number of other publications", "Total")
+
+        astats = [ [0, 0, 0] for _ in range(len(self.authors)) ]
+        for p in self.publications:
+            for a in p.authors:
+                if a == p.authors[0]:
+                    astats[a][0] += 1
+                elif a == p.authors[len(p.authors)-1]:
+                    astats[a][1] += 1
+                else:
+                    astats[a][2] += 1
+
+        data = [ [self.authors[i].name] + astats[i] + [sum(astats[i])]
+            for i in range(len(astats)) ]
+        return (header, data)
+
     def get_average_authors_per_publication_by_year(self, av):
         header = ("Year", "Conference papers",
             "Journals", "Books",

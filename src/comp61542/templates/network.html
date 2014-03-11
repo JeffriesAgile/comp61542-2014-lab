@@ -1,0 +1,10 @@
+{% extends "base.html" %}
+{% block title %}{{ args.title }}{% endblock %}
+{% block content %}
+
+<h1>{{ args.title }}</h1>
+
+<!--display visualization here-->
+<img src={{ args.data }} alt="publication network">
+
+{% endblock %}

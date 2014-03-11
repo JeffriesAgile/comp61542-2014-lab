@@ -1,6 +1,7 @@
 from comp61542 import app
 from database import database
-from flask import (render_template, request)
+from visualization import network
+from flask import (render_template, request, send_file)
 
 def format_data(data):
     fmt = "%.2f"
@@ -116,4 +117,22 @@ def showPublicationSummary(status):
         args["title"] = "Author by Year"
         args["data"] = db.get_author_totals_by_year()
 
+    if (status == "author_statistics"):
+        args["title"] = "Author Statistics"
+        args["data"] = db.get_author_statistics()
+
     return render_template('statistics_details.html', args=args)
+
+@app.route("/network")
+def showPublicationNetwork():
+    dataset = app.config['DATASET']
+    db = app.config['DATABASE']
+    args = {"dataset":dataset, "id":"network"}
+
+    net = network.PublicationNetwork()
+    net.generateNetwork()
+
+    args["title"] = "Publication Network"
+    args["data"] = "publication_network.png"
+
+    return render_template('network.html', args=args)

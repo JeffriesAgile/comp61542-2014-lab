@@ -27,9 +27,17 @@ def mode(X):
         else:
             d[item] = 1
 
-    m = (0, 0)
+    """m = (0, 0)
     for key in d.keys():
         if d[key] > m[1]:
             m = (key, d[key])
 
-    return [m[0]]
+    return [m[0]]"""
+
+    max_value = max(d.values())
+    m = []
+    for key in d.keys():
+        if d[key] == max_value:
+            m.append(key)
+
+    return m
