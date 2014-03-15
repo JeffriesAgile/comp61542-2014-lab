@@ -11,6 +11,18 @@
     <link href="{{ url_for('static', filename='css/navbar.css') }}" rel="stylesheet">
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.11.0/jquery.min.js"></script>
     <script src="{{ url_for('static', filename='js/bootstrap.min.js') }}"></script>
+
+    <link href="{{ url_for('static', filename='css/tablesorter.css') }}" rel="stylesheet">
+    <script src="{{ url_for('static', filename='js/jquery-latest.js') }}"></script>
+	<script src="{{ url_for('static', filename='js/jquery.tablesorter.min.js') }}"></script>
+	<script src="{{ url_for('static', filename='js/jquery.tablesorter.pager.min.js') }}"></script>
+	<script type="text/javascript">
+        $(function() {
+            $("table")
+                .tablesorter({widthFixed: true, widgets: ['zebra']})
+                .tablesorterPager({container: $("#pager")});
+        });
+	</script>
   </head>
 
   <body>
@@ -47,11 +59,11 @@
                   <li><a href="/statisticsdetails/publication_year">Publication by Year</a></li>
                   <li><a href="/statisticsdetails/author_year">Author by Year</a></li>
                   <li><a href="/statisticsdetails/author_statistics">Author Statistics</a></li>
-                  <li class="divider"></li>
-                  <li><a href="/averages">Averaged Year Data</a></li>
-                  <li><a href="/coauthors">Co-Authors</a></li>
+                  <!--<li class="divider"></li>-->
                 </ul>
               </li>
+              <li><a href="/averages">Averaged Year Data</a></li>
+              <li><a href="/coauthors">Co-Authors</a></li>
               <li><a href="/network">Publication Network</a></li>
             </ul>
           </div><!--/.nav-collapse -->

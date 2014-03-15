@@ -5,7 +5,7 @@
 <h1>{{ args.title }}</h1>
 
 <div class="table-responsive">
-<table class="table table-bordered table-striped">
+<table class="table table-bordered table-striped tablesorter">
   <thead>
     <tr>
     {% for column in args.data[0] %}
@@ -24,5 +24,21 @@
   {% endfor %}
   </tbody>
 </table>
+<div id="pager" class="pager">
+	<form>
+        <span class="firstpage"><span class="glyphicon glyphicon-backward"></span></span>
+		<span class="prevpage"><span class="glyphicon glyphicon-chevron-left"></span></span>
+		<input type="text" class="pagedisplay" style="width:70px;"/>
+		<span class="nextpage"><span class="glyphicon glyphicon-chevron-right"></span></span>
+        <span class="lastpage"><span class="glyphicon glyphicon-forward"></span></span>
+		<select class="pagesize">
+			<option selected="selected"  value="10">10</option>
+			<option value="20">20</option>
+			<option value="30">30</option>
+			<option value="40">40</option>
+			<option value="50">50</option>
+		</select>
+	</form>
+</div>
 </div>
 {% endblock %}
