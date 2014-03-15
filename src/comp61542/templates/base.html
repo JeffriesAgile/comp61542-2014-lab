@@ -5,7 +5,7 @@
     <title>{% block title %}{% endblock %}</title>
 
     <!-- Bootstrap core CSS -->
-    <link href="{{ url_for('static', filename='css/bootstrap.min.css') }}" rel="stylesheet">
+    <link href="{{ url_for('static', filename='css/bootstrap.css') }}" rel="stylesheet">
 
     <!-- Custom styles for this template -->
     <link href="{{ url_for('static', filename='css/navbar.css') }}" rel="stylesheet">
@@ -16,7 +16,17 @@
   <body>
     <div class="container">
     <!-- Static navbar -->
-      <div class="navbar navbar-default" role="navigation">
+    <a href="/"><img src="{{ url_for('static', filename='manchesterlogo.jpg') }}" style="width:150px; margin-bottom:10px;" /></a>
+      <form class="navbar-form navbar-right" role="form">
+        <div class="form-group">
+          <input type="text" placeholder="Username" class="form-control">
+        </div>
+        <div class="form-group">
+          <input type="password" placeholder="Password" class="form-control">
+        </div>
+        <button type="submit" class="btn btn-default">Sign in</button>
+      </form>
+      <div class="navbar navbar-inverse" role="navigation">
         <div class="container-fluid">
           <div class="navbar-header">
             <button type="button" class="navbar-toggle" data-toggle="collapse" data-target=".navbar-collapse">
@@ -25,11 +35,10 @@
               <span class="icon-bar"></span>
               <span class="icon-bar"></span>
             </button>
-            <a class="navbar-brand" href="#">JEFFRIES</a>
+            <a class="navbar-brand" href="/">JEFFRIES</a>
           </div>
           <div class="navbar-collapse collapse">
             <ul class="nav navbar-nav">
-              <li class="active"><a href="/">Home</a></li>
               <li class="dropdown">
                 <a href="#" class="dropdown-toggle" data-toggle="dropdown">Statistic Details <b class="caret"></b></a>
                 <ul class="dropdown-menu">
