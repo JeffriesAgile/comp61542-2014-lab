@@ -75,6 +75,7 @@ def showCoAuthors():
         end_year = int(request.args.get("end_year"))
 
     pub_type = 4
+
     if "pub_type" in request.args:
         pub_type = int(request.args.get("pub_type"))
 
@@ -110,8 +111,21 @@ def showPublicationSummary(status):
         args["data"] = db.get_publications_by_author()
 
     if (status == "publication_year"):
+        start_year = db.min_year
+        if "start_year" in request.args:
+            start_year = int(request.args.get("start_year"))
+
+        end_year = db.max_year
+        if "end_year" in request.args:
+            end_year = int(request.args.get("end_year"))
+
+        args["start_year"] = start_year
+        args["end_year"] = end_year
+        args["min_year"] = db.min_year
+        args["max_year"] = db.max_year
+
         args["title"] = "Publication by Year"
-        args["data"] = db.get_publications_by_year()
+        args["data"] = db.get_publications_by_year(start_year, end_year)
 
     if (status == "author_year"):
         args["title"] = "Author by Year"
