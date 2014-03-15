@@ -4,6 +4,18 @@
 
 <h1>{{ args.title }}</h1>
 
+<!-- Ruvin_test -->
+<form name="input" action="/statisticsdetails/publication_year" method="get" data-ajax="false" onSubmit="validateForm(this)">
+From: <input type="number" name="start_year" min="{{ args.min_year }}" max="{{ args.max_year }}" value="{{ args.start_year }}">
+To: <input type="number" name="end_year" min="{{ args.min_year }}" max="{{ args.max_year }}" value="{{ args.end_year }}">
+
+<input type="submit" value="Submit">
+</form>
+
+<h1>All Publications in {{ args.start_year }} {% if args.start_year != args.end_year %} - {{ args.end_year }}{% endif %}</h1>
+<!-- Ruvin_test -->
+
+
 <div class="table-responsive">
 <table class="table table-bordered table-striped">
   <thead>
@@ -25,4 +37,19 @@
   </tbody>
 </table>
 </div>
+
+<!-- Ruvin_test -->
+<script>
+function validateForm(form){
+  start_year = form["start_year"].value;
+  end_year = form["end_year"].value;
+  if (end_year < start_year){
+    alert("Invalid date range");
+    return false;
+  }
+  return true;
+}
+</script>
+<!-- Ruvin_test -->
+
 {% endblock %}
