@@ -3,9 +3,52 @@
 
   <head>
     <title>{% block title %}{% endblock %}</title>
+
+    <!-- Bootstrap core CSS -->
+    <link href="{{ url_for('static', filename='css/bootstrap.min.css') }}" rel="stylesheet">
+
+    <!-- Custom styles for this template -->
+    <link href="{{ url_for('static', filename='css/navbar.css') }}" rel="stylesheet">
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.11.0/jquery.min.js"></script>
+    <script src="{{ url_for('static', filename='js/bootstrap.min.js') }}"></script>
   </head>
 
   <body>
+    <!-- Static navbar -->
+      <div class="navbar navbar-default" role="navigation">
+        <div class="container-fluid">
+          <div class="navbar-header">
+            <button type="button" class="navbar-toggle" data-toggle="collapse" data-target=".navbar-collapse">
+              <span class="sr-only">Toggle navigation</span>
+              <span class="icon-bar"></span>
+              <span class="icon-bar"></span>
+              <span class="icon-bar"></span>
+            </button>
+            <a class="navbar-brand" href="#">Project name</a>
+          </div>
+          <div class="navbar-collapse collapse">
+            <ul class="nav navbar-nav">
+              <li class="active"><a href="/">Home</a></li>
+              <li class="dropdown">
+                <a href="#" class="dropdown-toggle" data-toggle="dropdown">Statistic Details <b class="caret"></b></a>
+                <ul class="dropdown-menu">
+                  <li><a href="/statisticsdetails/publication_summary">Publication Summary</a></li>
+                  <li><a href="/statisticsdetails/publication_author">Publication by Author</a></li>
+                  <li><a href="/statisticsdetails/publication_year">Publication by Year</a></li>
+                  <li><a href="/statisticsdetails/author_year">Author by Year</a></li>
+                  <li><a href="/statisticsdetails/author_statistics">Author Statistics</a></li>
+                  <li class="divider"></li>
+                  <li class="dropdown-header">Nav header</li>
+                  <li><a href="/averages">Averaged Year Data</a></li>
+                  <li><a href="/coauthors">Co-Authors</a></li>
+                </ul>
+              </li>
+              <li><a href="/network">Publication Network</a></li>
+            </ul>
+          </div><!--/.nav-collapse -->
+        </div><!--/.container-fluid -->
+      </div>
+
     <div id="page">
       <div id="header">
         <h1>COMP61542: {{ args.dataset }}</h1>

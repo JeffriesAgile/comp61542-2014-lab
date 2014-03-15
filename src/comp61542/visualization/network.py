@@ -32,4 +32,4 @@ class PublicationNetwork():
         plt.xlim(-0.05,1.05)
         plt.ylim(-0.05,1.05)
         plt.axis('off')
-        plt.savefig('src/comp61542/static/publication_network.png')
+        plt.savefig('comp61542/static/publication_network.png')
