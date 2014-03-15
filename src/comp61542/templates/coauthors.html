@@ -21,7 +21,8 @@ Publication type:
 
 <h1>{{ args.pub_str }} in {{ args.start_year }} {% if args.start_year != args.end_year %} - {{ args.end_year }}{% endif %}</h1>
 
-<table border="1px" bordercolor="000000" cellspacing="2px">
+<div class="table-responsive">
+<table class="table table-bordered table-striped">
   <thead>
     <tr>
     {% for column in args.data[0] %}
@@ -46,6 +47,7 @@ Publication type:
     </tr>
   </tfoot>
 </table>
+</div>
 
 <script>
 function validateForm(form){

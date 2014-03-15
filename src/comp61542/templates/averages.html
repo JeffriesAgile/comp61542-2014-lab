@@ -4,7 +4,8 @@
 <h1>{{ args.title }}</h1>
 {% for table in args.tables %}
 <h2>{{ table.title }}</h2>
-<table>
+<div class="table-responsive">
+<table class="table table-bordered table-striped">
   <thead>
     <tr>
       {% for column in table.header %}
@@ -22,6 +23,7 @@
     {% endfor %}
   </tbody>
 </table>
+</div>
 <br/>
 {% endfor %}
 {% endblock %}
