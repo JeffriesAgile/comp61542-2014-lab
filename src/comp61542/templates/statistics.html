@@ -6,4 +6,26 @@
 {% endblock %}
 
 {% block content %}
+<h1>{{ args.title }}</h1>
+<div class="table-responsive">
+<table class="table table-bordered table-striped tablesorter">
+  <thead>
+    <tr>
+    {% for column in args.data[0] %}
+      <th>{{ column }}</th>
+    {% endfor %}
+    </tr>
+  </thead>
+
+  <tbody>
+  {% for row in args.data[1] %}
+    <tr>
+    {% for data_item in row %}
+      <td>{{ data_item }}</td>
+    {% endfor %}
+    </tr>
+  {% endfor %}
+  </tbody>
+</table>
+</div>
 {% endblock %}

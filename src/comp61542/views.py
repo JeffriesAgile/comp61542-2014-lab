@@ -93,7 +93,10 @@ def showCoAuthors():
 @app.route("/")
 def showStatisticsMenu():
     dataset = app.config['DATASET']
+    db = app.config['DATABASE']
     args = {"dataset":dataset}
+    args["title"] = "Publication Summary"
+    args["data"] = db.get_publication_summary()
     return render_template('statistics.html', args=args)
 
 @app.route("/statisticsdetails/<status>")
@@ -102,28 +105,25 @@ def showPublicationSummary(status):
     db = app.config['DATABASE']
     args = {"dataset":dataset, "id":status}
 
-    if (status == "publication_summary"):
-        args["title"] = "Publication Summary"
-        args["data"] = db.get_publication_summary()
+    start_year = db.min_year
+    if "start_year" in request.args:
+        start_year = int(request.args.get("start_year"))
+
+    end_year = db.max_year
+    if "end_year" in request.args:
+        end_year = int(request.args.get("end_year"))
+
+    args["start_year"] = start_year
+    args["end_year"] = end_year
+
+    args["min_year"] = db.min_year
+    args["max_year"] = db.max_year
 
     if (status == "publication_author"):
         args["title"] = "Author Publication"
         args["data"] = db.get_publications_by_author()
 
     if (status == "publication_year"):
-        start_year = db.min_year
-        if "start_year" in request.args:
-            start_year = int(request.args.get("start_year"))
-
-        end_year = db.max_year
-        if "end_year" in request.args:
-            end_year = int(request.args.get("end_year"))
-
-        args["start_year"] = start_year
-        args["end_year"] = end_year
-        args["min_year"] = db.min_year
-        args["max_year"] = db.max_year
-
         args["title"] = "Publication by Year"
         args["data"] = db.get_publications_by_year(start_year, end_year)
 
@@ -135,6 +135,8 @@ def showPublicationSummary(status):
         args["title"] = "Author Statistics"
         args["data"] = db.get_author_statistics()
 
+    args["status"] = status
+
     return render_template('statistics_details.html', args=args)
 
 @app.route("/network")
@@ -143,10 +145,14 @@ def showPublicationNetwork():
     db = app.config['DATABASE']
     args = {"dataset":dataset, "id":"network"}
 
-    net = network.PublicationNetwork()
-    net.generateNetwork()
+    # net = network.PublicationNetwork()
+    # net.generateNetwork()
 
     args["title"] = "Publication Network"
-    args["data"] = "publication_network.png"
+    # args["data"] = "publication_network.png"
 
-    return render_template('network.html', args=args)
+    return render_template('graph.html', args=args)
+
+@app.route("/about")
+def aboutUs():
+    return render_template('about.html', args=[])

@@ -5,7 +5,7 @@
 <h1>{{ args.title }}</h1>
 
 <!-- Ruvin_test -->
-<form name="input" action="/statisticsdetails/publication_year" method="get" data-ajax="false" onSubmit="validateForm(this)">
+<form name="input" action="/statisticsdetails/{{ args.status }}" method="get" data-ajax="false" onSubmit="validateForm(this)">
 From: <input type="number" name="start_year" min="{{ args.min_year }}" max="{{ args.max_year }}" value="{{ args.start_year }}">
 To: <input type="number" name="end_year" min="{{ args.min_year }}" max="{{ args.max_year }}" value="{{ args.end_year }}">
 
@@ -36,6 +36,20 @@ To: <input type="number" name="end_year" min="{{ args.min_year }}" max="{{ args.
   {% endfor %}
   </tbody>
 </table>
+</div>
+
+<link href="{{ url_for('static', filename='css/tablesorter.css') }}" rel="stylesheet">
+<script src="{{ url_for('static', filename='js/jquery-latest.js') }}"></script>
+<script src="{{ url_for('static', filename='js/jquery.tablesorter.min.js') }}"></script>
+<script src="{{ url_for('static', filename='js/jquery.tablesorter.pager.min.js') }}"></script>
+<script type="text/javascript">
+    $(function() {
+        $("table")
+            .tablesorter({widthFixed: true, widgets: ['zebra']})
+            .tablesorterPager({container: $("#pager")});
+    });
+</script>
+
 <div id="pager" class="pager">
 	<form>
         <span class="firstpage"><span class="glyphicon glyphicon-backward"></span></span>
@@ -52,7 +66,7 @@ To: <input type="number" name="end_year" min="{{ args.min_year }}" max="{{ args.
 		</select>
 	</form>
 </div>
-</div>
+<br />
 
 <!-- Ruvin_test -->
 <script>

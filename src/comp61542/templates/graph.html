@@ -1,0 +1,18 @@
+{% extends "base.html" %}
+{% block title %}{{ args.title }}{% endblock %}
+{% block content %}
+
+<h1>{{ args.title }}</h1>
+
+<div id="chart"></div>
+<script src="{{ url_for('static', filename='js/d3.min.js') }}"></script>
+<script src="{{ url_for('static', filename='js/music-rgraph.js') }}"></script>
+<style type="text/css">
+    line.link {
+        fill: none;
+        stroke: #C1D6E1;
+        stroke-width: 1px;
+    }
+</style>
+
+{% endblock %}
