@@ -2,68 +2,72 @@ from comp61542 import app
 from database import database
 from visualization import network
 from flask import (render_template, request, send_file)
+from werkzeug import exceptions
+
 
 def format_data(data):
     fmt = "%.2f"
     result = []
     for item in data:
         if type(item) is list:
-            result.append(", ".join([ (fmt % i).rstrip('0').rstrip('.') for i in item ]))
+            result.append(", ".join([(fmt % i).rstrip('0').rstrip('.') for i in item]))
         else:
             result.append((fmt % item).rstrip('0').rstrip('.'))
     return result
+
 
 @app.route("/averages")
 def showAverages():
     dataset = app.config['DATASET']
     db = app.config['DATABASE']
-    args = {"dataset":dataset, "id":"averages"}
+    args = {"dataset": dataset, "id": "averages"}
     args['title'] = "Averaged Data"
     tables = []
     headers = ["Average", "Conference Paper", "Journal", "Book", "Book Chapter", "All Publications"]
-    averages = [ database.Stat.MEAN, database.Stat.MEDIAN, database.Stat.MODE ]
+    averages = [database.Stat.MEAN, database.Stat.MEDIAN, database.Stat.MODE]
     tables.append({
-        "id":1,
-        "title":"Average Authors per Publication",
-        "header":headers,
-        "rows":[
-                [ database.Stat.STR[i] ]
-                + format_data(db.get_average_authors_per_publication(i)[1])
-                for i in averages ] })
+        "id": 1,
+        "title": "Average Authors per Publication",
+        "header": headers,
+        "rows": [
+            [database.Stat.STR[i]]
+            + format_data(db.get_average_authors_per_publication(i)[1])
+            for i in averages]})
     tables.append({
-        "id":2,
-        "title":"Average Publications per Author",
-        "header":headers,
-        "rows":[
-                [ database.Stat.STR[i] ]
-                + format_data(db.get_average_publications_per_author(i)[1])
-                for i in averages ] })
+        "id": 2,
+        "title": "Average Publications per Author",
+        "header": headers,
+        "rows": [
+            [database.Stat.STR[i]]
+            + format_data(db.get_average_publications_per_author(i)[1])
+            for i in averages]})
     tables.append({
-        "id":3,
-        "title":"Average Publications in a Year",
-        "header":headers,
-        "rows":[
-                [ database.Stat.STR[i] ]
-                + format_data(db.get_average_publications_in_a_year(i)[1])
-                for i in averages ] })
+        "id": 3,
+        "title": "Average Publications in a Year",
+        "header": headers,
+        "rows": [
+            [database.Stat.STR[i]]
+            + format_data(db.get_average_publications_in_a_year(i)[1])
+            for i in averages]})
     tables.append({
-        "id":4,
-        "title":"Average Authors in a Year",
-        "header":headers,
-        "rows":[
-                [ database.Stat.STR[i] ]
-                + format_data(db.get_average_authors_in_a_year(i)[1])
-                for i in averages ] })
+        "id": 4,
+        "title": "Average Authors in a Year",
+        "header": headers,
+        "rows": [
+            [database.Stat.STR[i]]
+            + format_data(db.get_average_authors_in_a_year(i)[1])
+            for i in averages]})
 
     args['tables'] = tables
     return render_template("averages.html", args=args)
+
 
 @app.route("/coauthors")
 def showCoAuthors():
     dataset = app.config['DATASET']
     db = app.config['DATABASE']
     PUB_TYPES = ["Conference Papers", "Journals", "Books", "Book Chapters", "All Publications"]
-    args = {"dataset":dataset, "id":"coauthors"}
+    args = {"dataset": dataset, "id": "coauthors"}
     args["title"] = "Co-Authors"
 
     start_year = db.min_year
@@ -90,20 +94,22 @@ def showCoAuthors():
     args["pub_str"] = PUB_TYPES[pub_type]
     return render_template("coauthors.html", args=args)
 
+
 @app.route("/")
 def showStatisticsMenu():
     dataset = app.config['DATASET']
     db = app.config['DATABASE']
-    args = {"dataset":dataset}
+    args = {"dataset": dataset}
     args["title"] = "Publication Summary"
     args["data"] = db.get_publication_summary()
     return render_template('statistics.html', args=args)
+
 
 @app.route("/statisticsdetails/<status>")
 def showPublicationSummary(status):
     dataset = app.config['DATASET']
     db = app.config['DATABASE']
-    args = {"dataset":dataset, "id":status}
+    args = {"dataset": dataset, "id": status}
 
     start_year = db.min_year
     if "start_year" in request.args:
@@ -139,11 +145,12 @@ def showPublicationSummary(status):
 
     return render_template('statistics_details.html', args=args)
 
+
 @app.route("/network")
 def showPublicationNetwork():
     dataset = app.config['DATASET']
     db = app.config['DATABASE']
-    args = {"dataset":dataset, "id":"network"}
+    args = {"dataset": dataset, "id": "network"}
 
     # net = network.PublicationNetwork()
     # net.generateNetwork()
@@ -153,6 +160,32 @@ def showPublicationNetwork():
 
     return render_template('graph.html', args=args)
 
+
 @app.route("/about")
 def aboutUs():
     return render_template('about.html', args=[])
+
+
+@app.errorhandler(403)
+@app.errorhandler(404)
+@app.errorhandler(410)
+@app.errorhandler(500)
+def errorHandler(error):
+    title = str(error)
+    data = ""
+    email="dumbastic@gmail.com"
+    if type(error) == exceptions.NotFound:
+        title = "404"
+        data = "Sorry, the page you are looking for may have been removed, deleted or it was never there! Maybe you should check the URL properly and try again. However, if you feel this is a fault on our side (or you just love to argue), report us at"
+    elif type(error) == exceptions.Forbidden:
+        title = "403"
+        data = "Sorry, you dont have permission to access this page. Maybe you should log in first, or you just dont have the privilege to access this area. However, if you feel this is a fault on our side (or you just love to argue), report us at"
+    elif type(error) == exceptions.Gone:
+        title = "410"
+        data = "Sorry, the page you are looking for has been removed. You are out of luck. However, if you feel this is a fault on our side (or you just love to argue), report us at"
+    elif type(error) == exceptions.InternalServerError:
+        title = "500"
+        data = "Oops, this time it is our fault. Something went wrong, and we will fix it. If this causes you fatal problem, report us at"
+
+    args = {"title": title, "data": data, "email": email}
+    return render_template('error.html', args=args)

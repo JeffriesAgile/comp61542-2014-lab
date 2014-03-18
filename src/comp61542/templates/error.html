@@ -1,0 +1,7 @@
+{% extends "base.html" %}
+{% block title %}{{ args.title }}{% endblock %}
+{% block content %}
+
+<h1 style="text-align: center; font-size: 10em">{{ args.title }}</h1>
+<h3 style="text-align: center">{{ args.data }} <a href="mailto:{{ args.email }}">{{ args.email }}</a></h3>
+{% endblock %}
