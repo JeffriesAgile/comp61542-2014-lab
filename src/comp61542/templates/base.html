@@ -7,12 +7,12 @@
     <!-- Bootstrap core CSS -->
     <link href="{{ url_for('static', filename='css/bootstrap.css') }}" rel="stylesheet">
 
-    <link href="{{ url_for('static', filename='css/jeffries.css') }}" rel="stylesheet">
-
     <!-- Custom styles for this template -->
     <link href="{{ url_for('static', filename='css/navbar.css') }}" rel="stylesheet">
-    <script src="//ajax.googleapis.com/ajax/libs/jquery/2.1.0/jquery.min.js"></script>
+    <script src="//ajax.googleapis.com/ajax/libs/jquery/1.8.2/jquery.min.js"></script>
     <script src="//netdna.bootstrapcdn.com/bootstrap/3.1.1/js/bootstrap.min.js"></script>
+
+    <link href="{{ url_for('static', filename='css/jeffries.css') }}" rel="stylesheet">
 </head>
 
 <body>
@@ -20,7 +20,8 @@
     <!-- Static navbar -->
     <a href="/"><img src="{{ url_for('static', filename='images/universitylogo.png') }}"
                      style="width:150px; margin-bottom:10px;"/></a>
-    <button type="button" class="navbar-toggle" data-toggle="collapse" data-target="#viewsigninform">Sign in &raquo;</button>
+    <button type="button" class="navbar-toggle" data-toggle="collapse" data-target="#viewsigninform">Sign
+        in &raquo;</button>
 
     <form class="navbar-form navbar-right navbar-collapse collapse" id="viewsigninform" role="form">
         <div class="form-group"><input type="text" placeholder="Username" class="form-control"></div>
@@ -62,11 +63,11 @@
 
     <div id="page">
         <!--<div id="header">-->
-          <!--<h1>COMP61542: {{ args.dataset }}</h1>-->
+        <!--<h1>COMP61542: {{ args.dataset }}</h1>-->
 
-          <!--<div id="navigation">-->
-            <!--<a href="/">Home</a>-->
-          <!--</div>-->
+        <!--<div id="navigation">-->
+        <!--<a href="/">Home</a>-->
+        <!--</div>-->
         <!--</div>-->
 
         <div id="content">

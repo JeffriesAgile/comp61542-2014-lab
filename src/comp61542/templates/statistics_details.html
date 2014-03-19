@@ -19,34 +19,31 @@
     %}</h1>
 <!-- Ruvin_test -->
 
-<style type="text/css" title="currentStyle">
-    .FixedHeader_Cloned th { background-color: white; }
-</style>
 <link rel="stylesheet" type="text/css" href="{{ url_for('static', filename='css/dataTables.bootstrap.css') }}">
-<script type="text/javascript" language="javascript" src="{{ url_for('static', filename='js/jquery.dataTables.js') }}"></script>
-<script type="text/javascript" language="javascript" src="{{ url_for('static', filename='js/dataTables.bootstrap.js') }}"></script>
-<script type="text/javascript" charset="utf-8" src="{{ url_for('static', filename='js/FixedHeader.js') }}"></script>
-<script type="text/javascript" charset="utf-8">
+<script type="text/javascript"
+        src="{{ url_for('static', filename='js/jquery.dataTables.js') }}"></script>
+<script type="text/javascript"
+        src="{{ url_for('static', filename='js/dataTables.bootstrap.js') }}"></script>
+<script type="text/javascript">
     $(document).ready(function () {
-        var oTable = $('#example').dataTable();
-        new FixedHeader( oTable );
+        var oTable = $('#example').dataTable({
+            "aaSorting": []
+        });
+        new FixedHeader(oTable);
     });
 </script>
-<script type="text/javascript">
 
-(function(){
-  var bsa = document.createElement('script');
-     bsa.type = 'text/javascript';
-     bsa.async = true;
-     bsa.src = '//s3.buysellads.com/ac/bsa.js';
-  (document.getElementsByTagName('head')[0]||document.getElementsByTagName('body')[0]).appendChild(bsa);
-})();
-
-</script>
+<script type="text/javascript" src="{{ url_for('static', filename='js/FixedHeader.js') }}"></script>
+<style type="text/css" title="currentStyle">
+    .FixedHeader_Cloned {
+        margin-top: -7px;
+        background-color: #fff;
+    }
+</style>
 
 <div class="table-responsive">
 
-    <table cellpadding="0" cellspacing="0" border="0" class="table table-striped table-bordered" id="example">
+    <table class="table table-striped table-bordered" id="example">
         <thead>
         <tr>
             {% for column in args.data[0] %}
