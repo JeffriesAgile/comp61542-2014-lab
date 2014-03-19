@@ -1,29 +1,86 @@
 {% extends "base.html" %}
 {% block title %}About Jeffries{% endblock %}
 {% block content %}
-
 <h1>Jeffries' Crews</h1>
 
 <div class="table-responsive">
-<table class="table">
-    <tr>
-        <td>
-            <img src="images/Ruvin.jpg" style="width:250px;" />
-            <h5><b>Ruvin Yusubov</b> as Product Owner</h5>
-        </td>
-        <td>
-            <img src="images/Sylvain.jpg" style="width:250px;" />
-            <h5><b>Sylvain Huprelle</b> as Scrum Master</h5>
-        </td>
-        <td>
-            <img src="images/Halim.jpg" style="width:250px;" />
-            <h5><b>Halim Fadhli</b> as Scrum Slave</h5>
-        </td>
-        <td>
-            <img src="images/Dommy.jpg" style="width:250px;" />
-            <h5><b>Dommy Asfiandy</b> as Scrum Slave</h5>
-        </td>
-    </tr>
-</table>
+    <table class="table">
+        <tr>
+            <td>
+                <img src="images/Ruvin.jpg" style="width:250px;"/>
+                <h5><b>Ruvin Yusubov</b> as Product Owner</h5>
+            </td>
+            <td>
+                <img src="images/Sylvain.jpg" style="width:250px;"/>
+                <h5><b>Sylvain Huprelle</b> as Scrum Master</h5>
+            </td>
+            <td>
+                <img src="images/Halim.jpg" style="width:250px;"/>
+                <h5><b>Halim Fadhli</b> as Scrum Slave</h5>
+            </td>
+            <td>
+                <img src="images/Dommy.jpg" style="width:250px;"/>
+                <h5><b>Dommy Asfiandy</b> as Scrum Slave</h5>
+            </td>
+        </tr>
+    </table>
 </div>
+
+<h1>Contact Form</h1>
+{% if args.success %}
+<p>Thank you for your message. We'll get back to you shortly.</p>
+
+{% else %}
+<p>Have any problem? Or just feeling like to contact us? Use our contact form here!</p>
+
+{% for message in args.form.name.errors %}
+<div class="ctc-form">
+    <div class="flash">{{ message }}</div>
+</div>
+{% endfor %}
+
+{% for message in args.form.email.errors %}
+<div class="ctc-form">
+    <div class="flash">{{ message }}</div>
+</div>
+{% endfor %}
+
+{% for message in args.form.subject.errors %}
+<div class="ctc-form">
+    <div class="flash">{{ message }}</div>
+</div>
+{% endfor %}
+
+{% for message in args.form.message.errors %}
+<div class="ctc-form">
+    <div class="flash">{{ message }}</div>
+</div>
+{% endfor %}
+
+{% if args.success == False %}
+<br/>
+{% endif %}
+
+<div class="ctc-form">
+    <form role="form" action="/about" method=post>
+        {{ args.form.hidden_tag() }}
+        <div class="form-group ctc-input-left">{{ args.form.name(class_='form-control', placeholder='Name') }}</div>
+
+        <div class="form-group ctc-input-left">{{ args.form.email(class_='form-control', placeholder='Email')
+            }}
+        </div>
+        <div class="form-group ctc-input-left">{{ args.form.subject(class_='form-control',
+            placeholder='Subject') }}
+        </div>
+        <div class="form-group ctc-input-right">{{ args.form.message(class_='form-control ctc-textarea',
+            placeholder='Message') }}</textarea>
+        </div>
+
+
+        <div class="ctc-button">
+            {{ args.form.submit(class_='btn btn-default ctc-button-resize') }}
+        </div>
+    </form>
+</div>
+{% endif %}
 {% endblock %}
