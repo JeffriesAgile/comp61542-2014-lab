@@ -1,9 +1,10 @@
-from comp61542 import app
+from comp61542 import app, mail
 from database import database
 from visualization import network
-from flask import (render_template, request, send_file)
+from flask import (render_template, request, send_file, flash)
 from werkzeug import exceptions
-
+from forms import ContactForm
+from flask_mail import Message
 
 def format_data(data):
     fmt = "%.2f"
@@ -161,9 +162,27 @@ def showPublicationNetwork():
     return render_template('graph.html', args=args)
 
 
-@app.route("/about")
+@app.route("/about", methods=['GET', 'POST'])
 def aboutUs():
-    return render_template('about.html', args=[])
+    form = ContactForm()
+    args = {"form":form}
+
+    if request.method == 'POST':
+        if form.validate() == False:
+            flash('All fields are required.')
+            return render_template('about.html', args=args)
+        else:
+            msg = Message(form.subject.data, sender=form.email.data, recipients=['dumbastic@gmail.com'])
+            msg.body = """
+            From: %s <%s>
+            %s
+            """ % (form.name.data, form.email.data, form.message.data)
+            mail.send(msg)
+
+            args["success"] = True
+            return render_template('about.html', args=args)
+    elif request.method == 'GET':
+        return render_template('about.html', args=args)
 
 
 @app.errorhandler(403)

@@ -1,0 +1,69 @@
+/* Jeffries Contact Form START */
+.error-textarea {
+    height: 133px !important;
+}
+
+.error-button {
+    text-align: right;
+}
+
+.error-button-resize {
+    width: 200px;
+}
+
+.error-form {
+    margin-left: auto;
+    margin-right: auto;
+}
+
+@media (min-width: 992px) {
+    .error-form {
+        width: 80%;
+    }
+}
+
+@media (min-width: 768px) and (max-width: 991px) {
+    .error-form {
+        width: 100%;
+    }
+}
+
+@media (max-width: 767px) and (min-width: 601px) {
+    .error-form {
+        width: 80%;
+    }
+}
+
+@media (max-width: 600px) {
+    .error-form {
+        width: 100%;
+    }
+}
+
+@media (min-width: 768px) {
+    .error-form {
+        position: relative;
+    }
+
+    .error-input-left {
+        width: 30%;
+        left: 0px;
+        position: relative;
+    }
+
+    .error-input-right {
+        width: 69%;
+        right: 0px;
+        top: 0px;
+        position: absolute;
+    }
+}
+
+/* Jeffries Contact Form END */
+
+/* Message flashing */
+.flash {
+    background-color: #FBB0B0;
+    padding: 10px;
+    width: 400px;
+}
