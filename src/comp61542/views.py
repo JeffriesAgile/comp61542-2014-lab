@@ -173,7 +173,7 @@ def aboutUs():
             args["success"] = False
             return render_template('about.html', args=args)
         else:
-            msg = Message(form.subject.data, sender=form.email.data, recipients=['dumbastic@gmail.com'])
+            msg = Message(form.subject.data, sender=form.email.data, recipients=['dumbastic@gmail.com', 'cipherhat@gmail.com', 'ruvinbsu@gmail.com', 'sylvain.huprelle@gmail.com'])
             msg.body = """
             From: %s <%s>
             %s
