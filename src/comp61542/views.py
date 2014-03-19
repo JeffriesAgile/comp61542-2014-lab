@@ -170,6 +170,7 @@ def aboutUs():
     if request.method == 'POST':
         if form.validate() == False:
             flash('All fields are required.')
+            args["success"] = False
             return render_template('about.html', args=args)
         else:
             msg = Message(form.subject.data, sender=form.email.data, recipients=['dumbastic@gmail.com'])
