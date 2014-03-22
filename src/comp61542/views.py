@@ -1,7 +1,7 @@
 from comp61542 import app, contact
 from database import database
 from visualization import network
-from flask import (render_template, request, send_file, flash, redirect, url_for)
+from flask import (render_template, request, send_file)
 from werkzeug import exceptions
 
 
