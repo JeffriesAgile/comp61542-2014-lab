@@ -1,10 +1,9 @@
-from comp61542 import app, mail
+from comp61542 import app, contact
 from database import database
 from visualization import network
-from flask import (render_template, request, send_file, flash)
+from flask import (render_template, request, send_file, flash, redirect, url_for)
 from werkzeug import exceptions
-from forms import ContactForm
-from flask_mail import Message
+
 
 def format_data(data):
     fmt = "%.2f"
@@ -164,26 +163,13 @@ def showPublicationNetwork():
 
 @app.route("/about", methods=['GET', 'POST'])
 def aboutUs():
-    form = ContactForm()
-    args = {"form":form}
+    contactform = contact.ContactForm(prefix="contactform")
+    args = {"contactform": contactform}
 
     if request.method == 'POST':
-        if form.validate() == False:
-            flash('All fields are required.')
-            args["success"] = False
-            return render_template('about.html', args=args)
-        else:
-            msg = Message(form.subject.data, sender=form.email.data, recipients=['dumbastic@gmail.com', 'cipherhat@gmail.com', 'ruvinbsu@gmail.com', 'sylvain.huprelle@gmail.com'])
-            msg.body = """
-            From: %s <%s>
-            %s
-            """ % (form.name.data, form.email.data, form.message.data)
-            mail.send(msg)
-
-            args["success"] = True
-            return render_template('about.html', args=args)
-    elif request.method == 'GET':
-        return render_template('about.html', args=args)
+        if 'contactform-submit' in request.form:
+            contact.contactFormHandler(args, contactform)
+    return render_template('about.html', args=args)
 
 
 @app.errorhandler(403)
@@ -193,7 +179,7 @@ def aboutUs():
 def errorHandler(error):
     title = str(error)
     data = ""
-    email="dumbastic@gmail.com"
+    email = "dumbastic@gmail.com"
     if type(error) == exceptions.NotFound:
         title = "404"
         data = "Sorry, the page you are looking for may have been removed, deleted or it was never there! Maybe you should check the URL properly and try again. However, if you feel this is a fault on our side (or you just love to argue), report us at"

@@ -33,25 +33,25 @@
 {% else %}
 <p>Have any problem? Or just feeling like to contact us? Use our contact form here!</p>
 
-{% for message in args.form.name.errors %}
+{% for message in args.contactform.name.errors %}
 <div class="ctc-form">
     <div class="flash">{{ message }}</div>
 </div>
 {% endfor %}
 
-{% for message in args.form.email.errors %}
+{% for message in args.contactform.email.errors %}
 <div class="ctc-form">
     <div class="flash">{{ message }}</div>
 </div>
 {% endfor %}
 
-{% for message in args.form.subject.errors %}
+{% for message in args.contactform.subject.errors %}
 <div class="ctc-form">
     <div class="flash">{{ message }}</div>
 </div>
 {% endfor %}
 
-{% for message in args.form.message.errors %}
+{% for message in args.contactform.message.errors %}
 <div class="ctc-form">
     <div class="flash">{{ message }}</div>
 </div>
@@ -63,22 +63,23 @@
 
 <div class="ctc-form">
     <form role="form" action="/about" method=post>
-        {{ args.form.hidden_tag() }}
-        <div class="form-group ctc-input-left">{{ args.form.name(class_='form-control', placeholder='Name') }}</div>
+        {{ args.contactform.hidden_tag() }}
+        <div class="form-group ctc-input-left">{{ args.contactform.name(class_='form-control', placeholder='Name') }}
+        </div>
 
-        <div class="form-group ctc-input-left">{{ args.form.email(class_='form-control', placeholder='Email')
+        <div class="form-group ctc-input-left">{{ args.contactform.email(class_='form-control', placeholder='Email')
             }}
         </div>
-        <div class="form-group ctc-input-left">{{ args.form.subject(class_='form-control',
+        <div class="form-group ctc-input-left">{{ args.contactform.subject(class_='form-control',
             placeholder='Subject') }}
         </div>
-        <div class="form-group ctc-input-right">{{ args.form.message(class_='form-control ctc-textarea',
+        <div class="form-group ctc-input-right">{{ args.contactform.message(class_='form-control ctc-textarea',
             placeholder='Message') }}</textarea>
         </div>
 
 
         <div class="ctc-button">
-            {{ args.form.submit(class_='btn btn-default ctc-button-resize') }}
+            {{ args.contactform.submit(class_='btn btn-default ctc-button-resize') }}
         </div>
     </form>
 </div>
