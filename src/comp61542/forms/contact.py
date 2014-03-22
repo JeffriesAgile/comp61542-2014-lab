@@ -27,7 +27,9 @@ def contactFormHandler(args, contactform):
         msg = Message(contactform.subject.data, sender=contactform.email.data,
                       recipients=['dumbastic@gmail.com', 'cipherhat@gmail.com', 'ruvinbsu@gmail.com',
                                   'sylvain.huprelle@gmail.com'])
-        msg.body = """
+        msg.body = """EMAIL GENERATED FROM JEFFRIES ABOUT PAGE. DO NOT REPLY TO THIS EMAIL. REPLY TO THE SENDER'S EMAIL
+ADDRESS CONTAINED INSIDE THIS EMAIL AS NECESSARY.
+
     From: %s <%s>
     %s
         """ % (contactform.name.data, contactform.email.data, contactform.message.data)
