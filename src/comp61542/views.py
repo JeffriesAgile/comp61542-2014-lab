@@ -1,9 +1,10 @@
-from comp61542 import app, contact, login
+from comp61542 import app, mail
 from database import database
 from visualization import network
 from flask import (render_template, request, send_file)
 from werkzeug import exceptions
-
+from flask_mail import Message
+from forms import forms
 
 def format_data(data):
     fmt = "%.2f"
@@ -21,7 +22,7 @@ def showAverages():
     dataset = app.config['DATASET']
     db = app.config['DATABASE']
     args = {"dataset": dataset, "id": "averages"}
-    loginForm(args)
+    loginFormHandler(args)
     args['title'] = "Averaged Data"
     tables = []
     headers = ["Average", "Conference Paper", "Journal", "Book", "Book Chapter", "All Publications"]
@@ -69,7 +70,7 @@ def showCoAuthors():
     db = app.config['DATABASE']
     PUB_TYPES = ["Conference Papers", "Journals", "Books", "Book Chapters", "All Publications"]
     args = {"dataset": dataset, "id": "coauthors"}
-    loginForm(args)
+    loginFormHandler(args)
     args["title"] = "Co-Authors"
 
     start_year = db.min_year
@@ -102,7 +103,7 @@ def showStatisticsMenu():
     dataset = app.config['DATASET']
     db = app.config['DATABASE']
     args = {"dataset": dataset}
-    loginForm(args)
+    loginFormHandler(args)
     args["title"] = "Publication Summary"
     args["data"] = db.get_publication_summary()
     return render_template('statistics.html', args=args)
@@ -113,7 +114,7 @@ def showPublicationSummary(status):
     dataset = app.config['DATASET']
     db = app.config['DATABASE']
     args = {"dataset": dataset, "id": status}
-    loginForm(args)
+    loginFormHandler(args)
 
     start_year = db.min_year
     if "start_year" in request.args:
@@ -155,7 +156,7 @@ def showPublicationNetwork():
     dataset = app.config['DATASET']
     db = app.config['DATABASE']
     args = {"dataset": dataset, "id": "network"}
-    loginForm(args)
+    loginFormHandler(args)
 
     # net = network.PublicationNetwork()
     # net.generateNetwork()
@@ -169,8 +170,8 @@ def showPublicationNetwork():
 @app.route("/about", methods=['GET', 'POST'])
 def aboutUs():
     args = {}
-    loginForm(args)
-    contactForm(args)
+    loginFormHandler(args)
+    contactFormHandler(args)
     return render_template('about.html', args=args)
 
 
@@ -196,19 +197,33 @@ def errorHandler(error):
         data = "Oops, this time it is our fault. Something went wrong, and we will fix it. If this causes you fatal problem, report us at"
 
     args = {"title": title, "data": data, "email": email}
-    loginForm(args)
+    loginFormHandler(args)
     return render_template('error.html', args=args)
 
 
-def contactForm(args):
-    contactform = contact.ContactForm(prefix="contactform")
+def contactFormHandler(args):
+    contactform = forms.ContactForm(prefix="contactform")
     args["contactform"] = contactform
     if request.method == 'POST':
         if 'contactform-submit' in request.form:
-            contact.contactFormHandler(args, contactform)
+            if contactform.validate() == False:
+                args["success"] = False
+            else:
+                msg = Message(contactform.subject.data, sender=contactform.email.data,
+                              recipients=['dumbastic@gmail.com', 'cipherhat@gmail.com', 'ruvinbsu@gmail.com',
+                                          'sylvain.huprelle@gmail.com'])
+                msg.body = """
+EMAIL GENERATED FROM JEFFRIES ABOUT PAGE. DO NOT REPLY TO THIS EMAIL. REPLY TO THE SENDER'S EMAIL
+ADDRESS CONTAINED INSIDE THIS EMAIL AS NECESSARY.
+
+    From: %s <%s>
+    %s
+                """ % (contactform.name.data, contactform.email.data, contactform.message.data)
+                mail.send(msg)
+                args["success"] = True
 
 
-def loginForm(args):
-    loginform = login.LoginForm(prefix="login")
+def loginFormHandler(args):
+    loginform = forms.LoginForm(prefix="login")
     args["loginform"] = loginform
 
