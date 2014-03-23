@@ -1,4 +1,4 @@
-from comp61542 import app, contact
+from comp61542 import app, contact, login
 from database import database
 from visualization import network
 from flask import (render_template, request, send_file)
@@ -21,6 +21,7 @@ def showAverages():
     dataset = app.config['DATASET']
     db = app.config['DATABASE']
     args = {"dataset": dataset, "id": "averages"}
+    loginForm(args)
     args['title'] = "Averaged Data"
     tables = []
     headers = ["Average", "Conference Paper", "Journal", "Book", "Book Chapter", "All Publications"]
@@ -68,6 +69,7 @@ def showCoAuthors():
     db = app.config['DATABASE']
     PUB_TYPES = ["Conference Papers", "Journals", "Books", "Book Chapters", "All Publications"]
     args = {"dataset": dataset, "id": "coauthors"}
+    loginForm(args)
     args["title"] = "Co-Authors"
 
     start_year = db.min_year
@@ -100,6 +102,7 @@ def showStatisticsMenu():
     dataset = app.config['DATASET']
     db = app.config['DATABASE']
     args = {"dataset": dataset}
+    loginForm(args)
     args["title"] = "Publication Summary"
     args["data"] = db.get_publication_summary()
     return render_template('statistics.html', args=args)
@@ -110,6 +113,7 @@ def showPublicationSummary(status):
     dataset = app.config['DATASET']
     db = app.config['DATABASE']
     args = {"dataset": dataset, "id": status}
+    loginForm(args)
 
     start_year = db.min_year
     if "start_year" in request.args:
@@ -151,6 +155,7 @@ def showPublicationNetwork():
     dataset = app.config['DATASET']
     db = app.config['DATABASE']
     args = {"dataset": dataset, "id": "network"}
+    loginForm(args)
 
     # net = network.PublicationNetwork()
     # net.generateNetwork()
@@ -163,12 +168,9 @@ def showPublicationNetwork():
 
 @app.route("/about", methods=['GET', 'POST'])
 def aboutUs():
-    contactform = contact.ContactForm(prefix="contactform")
-    args = {"contactform": contactform}
-
-    if request.method == 'POST':
-        if 'contactform-submit' in request.form:
-            contact.contactFormHandler(args, contactform)
+    args = {}
+    loginForm(args)
+    contactForm(args)
     return render_template('about.html', args=args)
 
 
@@ -194,4 +196,19 @@ def errorHandler(error):
         data = "Oops, this time it is our fault. Something went wrong, and we will fix it. If this causes you fatal problem, report us at"
 
     args = {"title": title, "data": data, "email": email}
+    loginForm(args)
     return render_template('error.html', args=args)
+
+
+def contactForm(args):
+    contactform = contact.ContactForm(prefix="contactform")
+    args["contactform"] = contactform
+    if request.method == 'POST':
+        if 'contactform-submit' in request.form:
+            contact.contactFormHandler(args, contactform)
+
+
+def loginForm(args):
+    loginform = login.LoginForm(prefix="login")
+    args["loginform"] = loginform
+
