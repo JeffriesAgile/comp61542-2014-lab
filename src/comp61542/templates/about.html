@@ -27,7 +27,7 @@
 </div>
 
 <h1>Contact Form</h1>
-{% if args.success %}
+{% if args.contact_success %}
 <p>Thank you for your message. We'll get back to you shortly.</p>
 
 {% else %}
@@ -57,7 +57,7 @@
 </div>
 {% endfor %}
 
-{% if args.success == False %}
+{% if args.contact_success == False %}
 <br/>
 {% endif %}
 

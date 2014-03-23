@@ -1,7 +1,8 @@
+from flask.helpers import url_for
 from comp61542 import app, mail
 from database import database
 from visualization import network
-from flask import (render_template, request, send_file)
+from flask import (render_template, request, send_file, flash, redirect, abort)
 from werkzeug import exceptions
 from flask_mail import Message
 from forms import forms
@@ -99,15 +100,15 @@ def showCoAuthors():
     return render_template("coauthors.html", args=args)
 
 
-@app.route("/")
-def showStatisticsMenu():
-    dataset = app.config['DATASET']
-    db = app.config['DATABASE']
-    args = {"dataset": dataset}
-    login_form_handler(args)
-    args["title"] = "Publication Summary"
-    args["data"] = db.get_publication_summary()
-    return render_template('statistics.html', args=args)
+    @app.route("/")
+    def showStatisticsMenu():
+        dataset = app.config['DATASET']
+        db = app.config['DATABASE']
+        args = {"dataset": dataset}
+        login_form_handler(args)
+        args["title"] = "Publication Summary"
+        args["data"] = db.get_publication_summary()
+        return render_template('statistics.html', args=args)
 
 
 @app.route("/statisticsdetails/<status>")
@@ -168,12 +169,12 @@ def showPublicationNetwork():
     return render_template('graph.html', args=args)
 
 
-@app.route("/about", methods=['GET', 'POST'])
-def aboutUs():
-    args = {}
-    login_form_handler(args)
-    contact_form_handler(args)
-    return render_template('about.html', args=args)
+    @app.route("/about", methods=['GET', 'POST'])
+    def about():
+        args = {}
+        login_form_handler(args)
+        contact_form_handler(args)
+        return render_template('about.html', args=args)
 
 
 @app.errorhandler(403)
@@ -208,7 +209,8 @@ def contact_form_handler(args):
     if request.method == 'POST':
         if 'contactform-submit' in request.form:
             if contactform.validate() == False:
-                args["success"] = False
+                flash("All fields are required")
+                args["contact_success"] = False
             else:
                 msg = Message(contactform.subject.data, sender=contactform.email.data,
                               recipients=['dumbastic@gmail.com', 'cipherhat@gmail.com', 'ruvinbsu@gmail.com',
@@ -220,10 +222,16 @@ EMAIL GENERATED FROM JEFFRIES ABOUT PAGE. DO NOT REPLY TO THIS EMAIL. REPLY TO T
     %s
                 """ % (contactform.name.data, contactform.email.data, contactform.message.data)
                 mail.send(msg)
-                args["success"] = True
+                args["contact_success"] = True
 
 
 def login_form_handler(args):
-    loginform = forms.LoginForm(prefix="login")
+    loginform = forms.LoginForm(prefix="loginform")
     args["loginform"] = loginform
-
+    if request.method == 'POST':
+        if 'loginform-submit' in request.form:
+            if loginform.validate() == False:
+                flash("Login fail")
+                args["login_success"] = False
+            else:
+                args["login_success"] = True
