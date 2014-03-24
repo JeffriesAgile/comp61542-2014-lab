@@ -1,6 +1,7 @@
 from os import path
 import unittest
 import comp61542
+from comp61542.database import database
 
 class TestApp(unittest.TestCase):
 
@@ -9,7 +10,9 @@ class TestApp(unittest.TestCase):
         data = "dblp_curated_sample.xml"
         comp61542.app.config['TESTING'] = True
         comp61542.app.config['DATASET'] = data
-        comp61542.app.config['DATABASE'] = path.join(dir, "..", "data", data)
+        db = database.Database()
+        db.read(path.join(dir, "..", "data", data))
+        comp61542.app.config['DATABASE'] = db
         self.app = comp61542.app.test_client()
 
     def test_home(self):

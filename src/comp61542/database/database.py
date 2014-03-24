@@ -262,20 +262,18 @@ class Database:
             for y in ystats ]
         return (header, data)
 
-    def get_publications_by_year(self, start_year, end_year):
+    def get_publications_by_year(self):
         header = ("Year", "Number of conference papers",
             "Number of journals", "Number of books",
             "Number of book chapers", "Total")
 
         ystats = {}
         for p in self.publications:
-
-            if ((start_year == None or p.year >= start_year) and (end_year == None or p.year <= end_year)):
-                try:
-                    ystats[p.year][p.pub_type] += 1
-                except KeyError:
-                    ystats[p.year] = [0, 0, 0, 0]
-                    ystats[p.year][p.pub_type] += 1
+            try:
+                ystats[p.year][p.pub_type] += 1
+            except KeyError:
+                ystats[p.year] = [0, 0, 0, 0]
+                ystats[p.year][p.pub_type] += 1
 
         data = [ [y] + ystats[y] + [sum(ystats[y])] for y in ystats ]
         return (header, data)

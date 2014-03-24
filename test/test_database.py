@@ -1,5 +1,6 @@
 from os import path
 import unittest
+from docutils.nodes import danger
 
 from comp61542.database import database
 
@@ -111,6 +112,19 @@ class TestDatabase(unittest.TestCase):
             "incorrect number of authors")
         self.assertEqual(data[0][-1], 1,
             "incorrect total")
+
+    """Sylvain Testing!"""
+    def test_get_author_statistics(self):
+        db = database.Database()
+        self.assertTrue(db.read(path.join(self.data_dir, "simple3.xml")))
+        header, data = db.get_author_statistics()
+        self.assertEqual(header[4], "Total", "The header of the 5th column is not correct")
+        self.assertEqual(data[0][1], 2, "The number of times author 1 appears 1st is not right")
+        self.assertEqual(data[0][2], 0, "The number of times author 1 appears last is not right")
+        self.assertEqual(data[0][3], 0, "The number of times author 1 appears other is not right")
+        self.assertEqual(data[1][3], 1, "The number of times author 2 appears other is not right")
+        self.assertEqual(data[1][4], 2, "The total number of publications of author 2 is not right")
+        self.assertEqual(data[2][4], 1, "The total number of publications of author 3 is not right")
 
     def test_get_average_publications_per_author_by_year(self):
         db = database.Database()
