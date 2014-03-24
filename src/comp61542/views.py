@@ -169,12 +169,12 @@ def showPublicationNetwork():
     return render_template('graph.html', args=args)
 
 
-    @app.route("/about", methods=['GET', 'POST'])
-    def about():
-        args = {}
-        login_form_handler(args)
-        contact_form_handler(args)
-        return render_template('about.html', args=args)
+@app.route("/about", methods=['GET', 'POST'])
+def about():
+    args = {}
+    login_form_handler(args)
+    contact_form_handler(args)
+    return render_template('about.html', args=args)
 
 
 @app.errorhandler(403)
