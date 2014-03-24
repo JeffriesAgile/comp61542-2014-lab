@@ -100,15 +100,15 @@ def showCoAuthors():
     return render_template("coauthors.html", args=args)
 
 
-    @app.route("/")
-    def showStatisticsMenu():
-        dataset = app.config['DATASET']
-        db = app.config['DATABASE']
-        args = {"dataset": dataset}
-        login_form_handler(args)
-        args["title"] = "Publication Summary"
-        args["data"] = db.get_publication_summary()
-        return render_template('statistics.html', args=args)
+@app.route("/")
+def showStatisticsMenu():
+    dataset = app.config['DATASET']
+    db = app.config['DATABASE']
+    args = {"dataset": dataset}
+    login_form_handler(args)
+    args["title"] = "Publication Summary"
+    args["data"] = db.get_publication_summary()
+    return render_template('statistics.html', args=args)
 
 
 @app.route("/statisticsdetails/<status>")
