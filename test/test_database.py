@@ -113,7 +113,6 @@ class TestDatabase(unittest.TestCase):
         self.assertEqual(data[0][-1], 1,
             "incorrect total")
 
-    """Sylvain Testing!"""
     def test_get_author_statistics(self):
         db = database.Database()
         self.assertTrue(db.read(path.join(self.data_dir, "simple3.xml")))
@@ -125,7 +124,28 @@ class TestDatabase(unittest.TestCase):
         self.assertEqual(data[1][3], 1, "The number of times author 2 appears other is not right")
         self.assertEqual(data[1][4], 2, "The total number of publications of author 2 is not right")
         self.assertEqual(data[2][4], 1, "The total number of publications of author 3 is not right")
-
+        
+    def test_get_author_statistics_with_sole(self):
+        db = database.Database()
+        self.assertTrue(db.read(path.join(self.data_dir, "simple4.xml")))
+        header, data = db.get_author_statistics_with_sole()
+        self.assertEqual(header[4], "Sole", "The header of the 5th column is not correct")
+        # Testing author A
+        self.assertEqual(data[0][1], 1, "The number of times author A appears first is not right")
+        self.assertEqual(data[0][2], 0, "The number of times author A appears last is not right")
+        self.assertEqual(data[0][3], 0, "The number of times author A appears other is not right")
+        self.assertEqual(data[0][4], 1, "The number of times author A appears sole is not right")
+        # Testing author B
+        self.assertEqual(data[1][1], 0, "The number of times author B appears first is not right")
+        self.assertEqual(data[1][2], 1, "The number of times author B appears last is not right")
+        self.assertEqual(data[1][3], 1, "The number of times author B appears other is not right")
+        self.assertEqual(data[1][4], 0, "The number of times author B appears sole is not right")
+        # Testing author B
+        self.assertEqual(data[2][1], 1, "The number of times author C appears first is not right")
+        self.assertEqual(data[2][2], 1, "The number of times author C appears last is not right")
+        self.assertEqual(data[2][3], 0, "The number of times author C appears other is not right")
+        self.assertEqual(data[2][4], 1, "The number of times author C appears sole is not right")
+        
     def test_get_average_publications_per_author_by_year(self):
         db = database.Database()
         self.assertTrue(db.read(path.join(self.data_dir, "simple.xml")))
