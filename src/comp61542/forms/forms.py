@@ -15,7 +15,7 @@ class ContactForm(Form):
 class LoginForm(Form):
     username = TextField("Username", [validators.Required("Please enter your username")])
     password = PasswordField("Password", [validators.Required("Please enter your password")])
-    remember_me = BooleanField("Remember_Me", default=False)
+    remember_me = BooleanField("Remember me", default=False)
     submit = SubmitField("Login")
 
 

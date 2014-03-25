@@ -22,16 +22,17 @@
                      style="width:150px; margin-bottom:10px;"/></a>
     <button type="button" class="navbar-toggle" data-toggle="collapse" data-target="#viewsigninform">Sign
         in &raquo;</button>
-{% if args.login_success == False %}
-<div class="ctc-form">
-    <div class="flash">haha</div>
-</div>
-{% endif %}
-    <form class="navbar-form navbar-right navbar-collapse collapse" id="viewsigninform" role="form">
+    <form class="navbar-form navbar-right navbar-collapse collapse" id="viewsigninform" role="form" action="{{ request.path }}" method=post>
         {{ args.loginform.hidden_tag() }}
+        {% if args.login_success == False %}
+        <div class="form-group">{{ args.loginform.username(class_='form-control-error', placeholder='Username') }}</div>
+        <div class="form-group">{{ args.loginform.password(class_='form-control-error', placeholder='Password') }}</div>
+        {% else %}
         <div class="form-group">{{ args.loginform.username(class_='form-control', placeholder='Username') }}</div>
         <div class="form-group">{{ args.loginform.password(class_='form-control', placeholder='Password') }}</div>
+        {% endif %}
         {{ args.loginform.submit(class_='btn btn-default') }}
+        <br/>{{ args.loginform.remember_me() }} {{ args.loginform.remember_me.label(style='font-size: 12px;') }}
     </form>
     <div class="navbar navbar-inverse" role="navigation">
         <div class="container-fluid">

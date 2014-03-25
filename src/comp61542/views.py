@@ -19,7 +19,7 @@ def format_data(data):
     return result
 
 
-@app.route("/averages")
+@app.route("/averages", methods=['GET', 'POST'])
 def showAverages():
     dataset = app.config['DATASET']
     db = app.config['DATABASE']
@@ -66,7 +66,7 @@ def showAverages():
     return render_template("averages.html", args=args)
 
 
-@app.route("/coauthors")
+@app.route("/coauthors", methods=['GET', 'POST'])
 def showCoAuthors():
     dataset = app.config['DATASET']
     db = app.config['DATABASE']
@@ -100,7 +100,7 @@ def showCoAuthors():
     return render_template("coauthors.html", args=args)
 
 
-@app.route("/")
+@app.route("/", methods=['GET', 'POST'])
 def showStatisticsMenu():
     dataset = app.config['DATASET']
     db = app.config['DATABASE']
@@ -111,7 +111,7 @@ def showStatisticsMenu():
     return render_template('statistics.html', args=args)
 
 
-@app.route("/statisticsdetails/<status>")
+@app.route("/statisticsdetails/<status>", methods=['GET', 'POST'])
 def showPublicationSummary(status):
     dataset = app.config['DATASET']
     db = app.config['DATABASE']
@@ -153,7 +153,7 @@ def showPublicationSummary(status):
     return render_template('statistics_details.html', args=args)
 
 
-@app.route("/network")
+@app.route("/network", methods=['GET', 'POST'])
 def showPublicationNetwork():
     dataset = app.config['DATASET']
     db = app.config['DATABASE']
