@@ -24,7 +24,6 @@ def showAverages():
     dataset = app.config['DATASET']
     db = app.config['DATABASE']
     args = {"dataset": dataset, "id": "averages"}
-    login_form_handler(args)
     args['title'] = "Averaged Data"
     tables = []
     headers = ["Average", "Conference Paper", "Journal", "Book", "Book Chapter", "All Publications"]
@@ -72,7 +71,6 @@ def showCoAuthors():
     db = app.config['DATABASE']
     PUB_TYPES = ["Conference Papers", "Journals", "Books", "Book Chapters", "All Publications"]
     args = {"dataset": dataset, "id": "coauthors"}
-    login_form_handler(args)
     args["title"] = "Co-Authors"
 
     start_year = db.min_year
@@ -105,7 +103,6 @@ def showStatisticsMenu():
     dataset = app.config['DATASET']
     db = app.config['DATABASE']
     args = {"dataset": dataset}
-    login_form_handler(args)
     args["title"] = "Publication Summary"
     args["data"] = db.get_publication_summary()
     return render_template('statistics.html', args=args)
@@ -116,7 +113,6 @@ def showPublicationSummary(status):
     dataset = app.config['DATASET']
     db = app.config['DATABASE']
     args = {"dataset": dataset, "id": status}
-    login_form_handler(args)
 
     start_year = db.min_year
     if "start_year" in request.args:
@@ -158,7 +154,6 @@ def showPublicationNetwork():
     dataset = app.config['DATASET']
     db = app.config['DATABASE']
     args = {"dataset": dataset, "id": "network"}
-    login_form_handler(args)
 
     # net = network.PublicationNetwork()
     # net.generateNetwork()
@@ -172,13 +167,13 @@ def showPublicationNetwork():
 @app.route("/about", methods=['GET', 'POST'])
 def about():
     args = {}
-    login_form_handler(args)
     contact_form_handler(args)
     return render_template('about.html', args=args)
 
 
 @app.errorhandler(403)
 @app.errorhandler(404)
+@app.errorhandler(405)
 @app.errorhandler(410)
 @app.errorhandler(500)
 def errorHandler(error):
@@ -191,15 +186,17 @@ def errorHandler(error):
     elif type(error) == exceptions.Forbidden:
         title = "403"
         data = "Sorry, you dont have permission to access this page. Maybe you should log in first, or you just dont have the privilege to access this area. However, if you feel this is a fault on our side (or you just love to argue), report us at"
+    elif type(error) == exceptions.MethodNotAllowed:
+        title = "405"
+        data = "Sorry, the method you are trying to invoke are not allowed. Maybe you should you should try to do whatever you want to do on a different page. However, if you feel this is a fault on our side (or you just love to argue), report us at"
     elif type(error) == exceptions.Gone:
         title = "410"
         data = "Sorry, the page you are looking for has been removed. You are out of luck. However, if you feel this is a fault on our side (or you just love to argue), report us at"
     elif type(error) == exceptions.InternalServerError:
         title = "500"
         data = "Oops, this time it is our fault. Something went wrong, and we will fix it. If this causes you fatal problem, report us at"
-
+    request.path="/" #so if HTTP method POST are invoked (e.g login submit action) on error page, it will be redirected to index page instead
     args = {"title": title, "data": data, "email": email}
-    login_form_handler(args)
     return render_template('error.html', args=args)
 
 
@@ -225,13 +222,17 @@ EMAIL GENERATED FROM JEFFRIES ABOUT PAGE. DO NOT REPLY TO THIS EMAIL. REPLY TO T
                 args["contact_success"] = True
 
 
-def login_form_handler(args):
+# the first method to be invoked before every page rendering - returning and handling login form
+@app.context_processor
+def login_form_handler():
+    print exceptions.MethodNotAllowed.code
     loginform = forms.LoginForm(prefix="loginform")
-    args["loginform"] = loginform
+    def_dict = {'loginform':loginform}
     if request.method == 'POST':
         if 'loginform-submit' in request.form:
             if loginform.validate() == False:
                 flash("Login fail")
-                args["login_success"] = False
+                def_dict["login_success"] = False
             else:
-                args["login_success"] = True
+                def_dict["login_success"] = True
+    return dict(def_dict = def_dict)
