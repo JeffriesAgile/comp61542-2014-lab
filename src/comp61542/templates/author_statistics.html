@@ -4,20 +4,23 @@
 
 <h1>{{ args.title }}</h1>
 
-<!-- Ruvin_test
-<form name="input" action="/statisticsdetails/{{ args.status }}" method="get" data-ajax="false"
-      onSubmit="validateForm(this)">
-    From: <input type="number" name="start_year" min="{{ args.min_year }}" max="{{ args.max_year }}"
-                 value="{{ args.start_year }}">
-    To: <input type="number" name="end_year" min="{{ args.min_year }}" max="{{ args.max_year }}"
-               value="{{ args.end_year }}">
+<form name="input" action="/author_statistics" method="get" data-ajax="false">
+    Publication type:
+
+    <select name="pub_type">
+        <option value="4">All Publications</option>
+        <option value="0"
+        {% if args.pub_type == 0 %} selected="selected"{% endif %}>Conference Paper</option>
+        <option value="1"
+        {% if args.pub_type == 1 %} selected="selected"{% endif %}>Journal</option>
+        <option value="2"
+        {% if args.pub_type == 2 %} selected="selected"{% endif %}>Book</option>
+        <option value="3"
+        {% if args.pub_type == 3 %} selected="selected"{% endif %}>Book Chapter</option>
+    </select>
 
     <input type="submit" value="Submit">
 </form>
-
-<h1>All Publications in {{ args.start_year }} {% if args.start_year != args.end_year %} - {{ args.end_year }}{% endif
-    %}</h1>
-Ruvin_test -->
 
 <link rel="stylesheet" type="text/css" href="{{ url_for('static', filename='css/dataTables.bootstrap.css') }}">
 <script type="text/javascript"
@@ -27,7 +30,16 @@ Ruvin_test -->
 <script type="text/javascript">
     $(document).ready(function () {
         var oTable = $('#example').dataTable({
-            "aaSorting": []
+            "aaSorting": [ [0, 'asc'] ]
+//            "aoColumns": [
+//              null,
+//              { "aDataSort": [ 1, 0 ] },
+//              { "aDataSort": [ 2, 0 ] },
+//              { "aDataSort": [ 3, 0 ] },
+//              { "aDataSort": [ 4, 0 ] },
+//              { "aDataSort": [ 5, 0 ] },
+//              { "aDataSort": [ 6, 0 ] }
+//            ]
         });
         new FixedHeader(oTable);
     });
@@ -47,7 +59,8 @@ Ruvin_test -->
         <thead>
         <tr>
             {% for column in args.data[0] %}
-            <th>{{ column }}</th>
+            <th {% if column == args.data[0][0] %} style="display:none"{% endif %}>
+                {{ column }}</th>
             {% endfor %}
         </tr>
         </thead>
@@ -56,7 +69,8 @@ Ruvin_test -->
         {% for row in args.data[1] %}
         <tr>
             {% for data_item in row %}
-            <td>{{ data_item }}</td>
+            <td {% if data_item == row[0] %} style="display:none"{% endif %}>
+                {{ data_item }}</td>
             {% endfor %}
         </tr>
         {% endfor %}
@@ -64,19 +78,5 @@ Ruvin_test -->
     </table>
 
 </div>
-
-<!-- Ruvin_test -->
-<script>
-    function validateForm(form) {
-        start_year = form["start_year"].value;
-        end_year = form["end_year"].value;
-        if (end_year < start_year) {
-            alert("Invalid date range");
-            return false;
-        }
-        return true;
-    }
-</script>
-<!-- Ruvin_test -->
 
 {% endblock %}
