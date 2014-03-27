@@ -148,6 +148,25 @@ def showPublicationSummary(status):
 
     return render_template('statistics_details.html', args=args)
 
+@app.route("/author_statistics", methods=['GET', 'POST'])
+def showAuthorStatistics():
+    dataset = app.config['DATASET']
+    db = app.config['DATABASE']
+    PUB_TYPES = ["Conference Papers", "Journals", "Books", "Book Chapters", "All Publications"]
+    args = {"dataset": dataset, "id": "author_statistics"}
+
+    args["title"] = "Author Statistics"
+
+    pub_type = 4
+    if "pub_type" in request.args:
+        pub_type = int(request.args.get("pub_type"))
+
+    args["data"] = db.get_author_statistics_with_sole(pub_type)
+    args["pub_type"] = pub_type
+    args["pub_str"] = PUB_TYPES[pub_type]
+
+    return render_template('author_statistics.html', args=args)
+
 
 @app.route("/network", methods=['GET', 'POST'])
 def showPublicationNetwork():

@@ -1,25 +1,25 @@
 <dblp>
 <inproceedings>
-    <author>AUTHOR A</author>
-    <author>AUTHOR B</author>
-    <author>AUTHOR C</author>
+    <author>AUTHORb A</author>
+    <author>AUTHORa B</author>
+    <author>AUTHORc C</author>
     <title>TITLE</title>
     <year>9999</year>
 </inproceedings>
 <book>
-    <author>AUTHOR A</author>
+    <author>AUTHORb A</author>
     <title>TITLE2</title>
     <year>9999</year>
 </book>
-<inproceedings>
-    <author>AUTHOR C</author>
-    <author>AUTHOR B</author>
+<article>
+    <author>AUTHORc C</author>
+    <author>AUTHORa B</author>
     <title>TITLE3</title>
     <year>9999</year>
-</inproceedings>
-<book>
-    <author>AUTHOR C</author>
+</article>
+<incollection>
+    <author>AUTHORc C</author>
     <title>TITLE4</title>
     <year>9999</year>
-</book>
+</incollection>
 </dblp>
