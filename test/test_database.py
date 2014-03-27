@@ -151,7 +151,6 @@ class TestDatabase(unittest.TestCase):
         self.assertTrue(db.read(path.join(self.data_dir, "test-author-stat-detailed.xml")))
         # Testing all publications (4) for author A
         data = db.get_author_statistics_detailed("AUTHOR A", 4)
-
         self.assertEqual(data[0], 2, "The number of publications of author A as first is not right")
         self.assertEqual(data[1], 1, "The number of publications of author A as last is not right")
         self.assertEqual(data[2], 1, "The number of publications of author A as sole is not right")
@@ -164,6 +163,12 @@ class TestDatabase(unittest.TestCase):
         self.assertEqual(data[2], 0, "The number of conference papers of author B as sole is not right")
         self.assertEqual(data[3], 2, "The number of co-authors in conference papers of author B is not right")
         self.assertEqual(data[4], 2, "The number of overall conference papers of author B is not right")
+        data = db.get_author_statistics_detailed("AUTHOR C", 4)
+        self.assertEqual(data[0], 0, "The number of publications of author C as first is not right")
+        self.assertEqual(data[1], 2, "The number of publications of author C as last is not right")
+        self.assertEqual(data[2], 0, "The number of publications of author C as sole is not right")
+        self.assertEqual(data[3], 2, "The number of co-authors in publications of author C is not right" + str(data[3]))
+        self.assertEqual(data[4], 2, "The number of overall publications of author C is not right")
         # Testing exception case on the type index
         self.assertRaises(ValueError, lambda: db.get_author_statistics_detailed(0, 5))
         
