@@ -253,7 +253,6 @@ def login_form_handler():
     loginform = forms.LoginForm(prefix="loginform")
     def_dict = {'loginform':loginform}
     if request.method == 'POST' and "loginform-username" in request.form:
-        print request.form
         if 'loginform-submit' in request.form:
             if loginform.validate() == False:
                 flash("Login fail")

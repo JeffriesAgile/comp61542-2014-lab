@@ -247,7 +247,12 @@ class TestDatabase(unittest.TestCase):
         self.assertEqual(data[4], 2, "The number of overall publications of author C is not right")
         # Testing exception case on the type index
         self.assertRaises(ValueError, lambda: db.get_author_statistics_detailed(0, 5))
-        
+
+    def test_haha(self):
+        db = database.Database()
+        self.assertTrue(db.read(path.join(self.data_dir, "dblp_curated_sample.xml")))
+        print db.get_author_statistics_detailed_all("Stefano Ceri")
+
     def test_get_average_publications_per_author_by_year(self):
         db = database.Database()
         self.assertTrue(db.read(path.join(self.data_dir, "simple.xml")))
