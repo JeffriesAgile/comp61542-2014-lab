@@ -28,18 +28,26 @@
 <script type="text/javascript"
         src="{{ url_for('static', filename='js/dataTables.bootstrap.js') }}"></script>
 <script type="text/javascript">
+    jQuery.fn.dataTableExt.oSort['author-asc']  = function(x,y) {
+        return ((x < y) ? -1 : ((x > y) ? 1 : 0));
+    };
+
+    jQuery.fn.dataTableExt.oSort['author-desc'] = function(x,y) {
+        return ((x < y) ? -1 : ((x > y) ? 1 : 0));
+    };
+
     $(document).ready(function () {
         var oTable = $('#example').dataTable({
-            "aaSorting": [ [6, 'asc'] ]
-//            "aoColumns": [
-//              null,
-//              { "aDataSort": [ 1, 0 ] },
-//              { "aDataSort": [ 2, 0 ] },
-//              { "aDataSort": [ 3, 0 ] },
-//              { "aDataSort": [ 4, 0 ] },
-//              { "aDataSort": [ 5, 0 ] },
-//              { "aDataSort": [ 6, 0 ] }
-//            ]
+//            "aaSorting": [ [6, 'asc'] ],
+            "aoColumns": [
+              { "aDataSort": [ 0, 6 ] },
+              { "aDataSort": [ 1, 6 ] },
+              { "aDataSort": [ 2, 6 ] },
+              { "aDataSort": [ 3, 6 ] },
+              { "aDataSort": [ 4, 6 ] },
+              { "aDataSort": [ 5, 6 ] },
+              { "sType": "author" }
+            ]
         });
         new FixedHeader(oTable);
     });
