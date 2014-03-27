@@ -262,6 +262,30 @@ class Database:
         data = [ [self.authors[i].name] + astats[i] + [sum(astats[i])]
             for i in range(len(astats)) ]
         return (header, data)
+    
+    def get_author_statistics_detailed(self, name, pub_type):
+        author_id = self.author_idx[name]
+        data = [0, 0, 0, 0]
+        coauthors = []
+        for p in self.publications:
+            if (pub_type == 4 or p.pub_type == pub_type):
+                if isinstance(name, p.authors):
+                    for a in p.authors:
+                        if a == name:
+                            data[4] += 1
+                            if len(p.authors) == 1 and name == p.authors[0]:
+                                    data[2] += 1
+                            else:
+                                if name == p.authors[0] or name == p.authors[len(p.authors)-1]:
+                                    if name == p.authors[0]:
+                                        data[0] += 1
+                                    if name == p.authors[len(p.authors)-1]:
+                                        data[1] += 1
+                        else:
+                            if not isinstance(a, coauthors):
+                                coauthors.append(a)
+        data[3] = len(coauthors)
+        return data
 
     def get_average_authors_per_publication_by_year(self, av):
         header = ("Year", "Conference papers",

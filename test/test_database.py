@@ -149,15 +149,15 @@ class TestDatabase(unittest.TestCase):
     def test_get_author_statistics_detailed(self):
         db = database.Database()
         self.assertTrue(db.read(path.join(self.data_dir, "test-author-stat-detailed.xml")))
-        # Testing all publications (4) for author A (0)
-        data = db.get_author_statistics_detailed(0, 4)
+        # Testing all publications (4) for author A
+        data = db.get_author_statistics_detailed("AUTHOR A", 4)
         self.assertEqual(data[0], 2, "The number of publications of author A as first is not right")
         self.assertEqual(data[1], 1, "The number of publications of author A as last is not right")
         self.assertEqual(data[2], 1, "The number of publications of author A as sole is not right")
         self.assertEqual(data[3], 3, "The number of co-authors of author A is not right")
         self.assertEqual(data[4], 5, "The number of overall publications of author A is not right")
-        # Testing inproceedings (0) for author B (1)
-        data = db.get_author_statistics_detailed(0, 0)
+        # Testing inproceedings (0) for author B
+        data = db.get_author_statistics_detailed("AUTHOR B", 0)
         self.assertEqual(data[0], 0, "The number of conference papers of author B as first is not right")
         self.assertEqual(data[1], 1, "The number of conference papers of author B as last is not right")
         self.assertEqual(data[2], 0, "The number of conference papers of author B as sole is not right")
