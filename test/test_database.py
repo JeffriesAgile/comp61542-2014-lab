@@ -151,6 +151,7 @@ class TestDatabase(unittest.TestCase):
         self.assertTrue(db.read(path.join(self.data_dir, "test-author-stat-detailed.xml")))
         # Testing all publications (4) for author A
         data = db.get_author_statistics_detailed("AUTHOR A", 4)
+
         self.assertEqual(data[0], 2, "The number of publications of author A as first is not right")
         self.assertEqual(data[1], 1, "The number of publications of author A as last is not right")
         self.assertEqual(data[2], 1, "The number of publications of author A as sole is not right")
