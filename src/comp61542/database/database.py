@@ -264,8 +264,28 @@ class Database:
                  [self.authors[i].name.split(" ")[len(self.authors[i].name.split(" "))-1]]
             for i in range(len(astats)) ]
         return (header, data)
-    
+
     def get_author_statistics_detailed(self, name, pub_type):
+        """
+        Get detailed statistics for one particular author.
+
+        @type  name: String
+        @param name: Name of the author. Example: "Author A"
+        @type  pub_type: int
+        @param pub_type: The publication type ranging from 0-4
+                    0 = CONFERENCE PAPER (INPROCEEDINGS)
+                    1 = JOURNAL
+                    2 = BOOK
+                    3 = BOOK CHAPTER
+                    4 = ALL PUBLICATION
+        @rtype:   dict
+        @return:  Ranging from 0-4
+                    0 = The number of publications the author appears first
+                    1 = The number of publications the author appears last
+                    2 = The number of publications the author has sole ownership
+                    3 = The number of co-authors for the author
+                    4 = The number of overall publications for the author
+        """
         if (pub_type > 4):
             raise ValueError
         author_id = self.author_idx[name]
