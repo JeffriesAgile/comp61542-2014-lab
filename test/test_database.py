@@ -140,7 +140,7 @@ class TestDatabase(unittest.TestCase):
         self.assertEqual(data[1][2], 1, "The number of times author B appears last is not right")
         self.assertEqual(data[1][3], 1, "The number of times author B appears other is not right")
         self.assertEqual(data[1][4], 0, "The number of times author B appears sole is not right")
-        # Testing author B
+        # Testing author C
         self.assertEqual(data[2][1], 1, "The number of times author C appears first is not right")
         self.assertEqual(data[2][2], 1, "The number of times author C appears last is not right")
         self.assertEqual(data[2][3], 0, "The number of times author C appears other is not right")
@@ -163,6 +163,8 @@ class TestDatabase(unittest.TestCase):
         self.assertEqual(data[2], 1, "The number of conference papers of author B as last is not right")
         self.assertEqual(data[3], 0, "The number of conference papers of author B as sole is not right")
         self.assertEqual(data[4], 2, "The number of co-authors in conference papers of author B is not right")
+        # Testing exception case on the type index
+        self.assertRaises(ValueError, lambda: db.get_author_statistics_detailed(0, 5))
         
     def test_get_average_publications_per_author_by_year(self):
         db = database.Database()
