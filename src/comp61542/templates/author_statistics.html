@@ -59,7 +59,7 @@
         <thead>
         <tr>
             {% for column in args.data[0] %}
-            <th {% if column == args.data[0][args.data[0]|length] %} style="display:none"{% endif %}>
+            <th {% if column == args.data[0][args.data[0]|length-1] %} style="display:none"{% endif %}>
                 {{ column }}</th>
             {% endfor %}
         </tr>
@@ -69,7 +69,7 @@
         {% for row in args.data[1] %}
         <tr>
             {% for data_item in row %}
-            <td {% if data_item == row[row[0]|length] %} style="display:none"{% endif %}>
+            <td {% if data_item == row[row|length-1] %} style="display:none"{% endif %}>
                 {{ data_item }}</td>
             {% endfor %}
         </tr>
