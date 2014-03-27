@@ -265,6 +265,15 @@ class Database:
             for i in range(len(astats)) ]
         return (header, data)
 
+    def get_author_statistics_detailed_all(self, name):
+        header = ("", "First Author", "Last Author", "Sole Author", "Co-Authors", "All")
+        title = ["Conference Papers", "Journal", "Book", "Book Chapter", "All Publication"]
+        data = []
+        for i in range(0, 5):
+            data += [[str(title[i])] + self.get_author_statistics_detailed(name, i)]
+        return (header, data)
+
+
     def get_author_statistics_detailed(self, name, pub_type):
         """
         Get detailed statistics for one particular author.
