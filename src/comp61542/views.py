@@ -142,7 +142,7 @@ def showPublicationSummary(status):
 
     if (status == "author_statistics"):
         args["title"] = "Author Statistics"
-        args["data"] = db.get_author_statistics()
+        args["data"] = db.get_author_statistics_with_sole()
 
     args["status"] = status
 
