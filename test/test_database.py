@@ -129,7 +129,7 @@ class TestDatabase(unittest.TestCase):
         db = database.Database()
         self.assertTrue(db.read(path.join(self.data_dir, "simple4.xml")))
         header, data = db.get_author_statistics_with_sole()
-        self.assertEqual(header[4], "Sole", "The header of the 5th column is not correct")
+        self.assertEqual(header[4], "Sole author", "The header of the 5th column is not correct")
         # Testing author A
         self.assertEqual(data[0][1], 1, "The number of times author A appears first is not right")
         self.assertEqual(data[0][2], 0, "The number of times author A appears last is not right")
