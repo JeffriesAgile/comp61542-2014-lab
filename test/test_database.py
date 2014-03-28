@@ -146,7 +146,6 @@ class TestDatabase(unittest.TestCase):
         self.assertEqual(data[2][3], 0, "The number of times author C appears other is not right")
         self.assertEqual(data[2][4], 1, "The number of times author C appears sole is not right")
 
-
         header, data = db.get_author_statistics_with_sole(0)
         self.assertEqual(header[4], "Sole author", "The header of the 5th column is not correct")
         # Testing author A
@@ -284,7 +283,31 @@ class TestDatabase(unittest.TestCase):
         self.assertEqual(data[8], "Samuel Brian", "incorrect order, 8th author should be Samuel Brian")
         self.assertEqual(data[9], "Alice Esam", "incorrect order, 9th author should be Alice Esam")
         self.assertEqual(data[10], "Brian Esam", "incorrect order, 10th author should be Brian Esam")
-
+        
+    def test_split_name(self):
+        db = database.Database()
+        # No middlename
+        data = db.split_name("Samuel Alexander")
+        self.assertEqual(len(data), 2, "There's a mismatch between the table length and the expected name split")
+        self.assertEqual(data[0], "Alexander", "The lastname is wrong")
+        self.assertEqual(data[1], "Samuel", "The firstname is wrong")
+        # One middlename
+        data = db.split_name("Samuel Alexander Checkov")
+        self.assertEqual(len(data), 3, "There's a mismatch between the table length and the expected name split")
+        self.assertEqual(data[0], "Checkov", "The lastname is wrong")
+        self.assertEqual(data[1], "Samuel", "The firstname is wrong")
+        self.assertEqual(data[2], "Alexander", "The middlename is wrong")
+        # Two middlenames
+        data = db.split_name("Leonard Alexander R. Qwerty")
+        self.assertEqual(len(data), 3, "There's a mismatch between the table length and the expected name split")
+        self.assertEqual(data[0], "Qwerty", "The lastname is wrong")
+        self.assertEqual(data[1], "Leonard", "The firstname is wrong")
+        self.assertEqual(data[2], "Alexander R.", "The middlename is wrong")
+        # Special case: only one name
+        data = db.split_name("Uli")
+        self.assertEqual(len(data), 1, "There's a mismatch between the table length and the expected name split")
+        self.assertEqual(data[0], "Uli", "The name is wrong")
+        
     def test_get_average_publications_per_author_by_year(self):
         db = database.Database()
         self.assertTrue(db.read(path.join(self.data_dir, "simple.xml")))
