@@ -264,7 +264,9 @@ def login_form_handler():
             else:
                 username = request.form['loginform-username']
                 password = request.form['loginform-password']
-                print username, password
+                remember_me = False
+                if 'remember_me' in request.form:
+                    remember_me = True
                 registered_user = models.User.query.filter_by(username=username,password=password).first()
                 if registered_user is None:
                     flash("Login fail")
