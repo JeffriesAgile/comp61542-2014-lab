@@ -459,6 +459,19 @@ class Database:
                     links.add((a, a2))
         return (nodes, links)
 
+    def get_author_by_name(self, name):
+        data = []
+        for p in self.publications:
+            for i in p.authors:
+                if name in self.authors[i].name:
+                    data.append(self.authors[i].name)
+        return data
+
+    def sort_author_by_name(self, name):
+        data = self.get_author_by_name(name)
+
+        return data
+
 class DocumentHandler(handler.ContentHandler):
     TITLE_TAGS = [ "sub", "sup", "i", "tt", "ref" ]
     PUB_TYPE = {

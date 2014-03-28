@@ -262,20 +262,27 @@ class TestDatabase(unittest.TestCase):
         self.assertEqual(db.get_author_statistics_detailed_all("AUTHOR D"), (header, body), "The statistics detail for AUTHOR D is not right")
         self.assertI
 
+    def test_author_by_name(self):
+        db = database.Database()
+        self.assertTrue(db.read(path.join(self.data_dir, "sprint-2-story-5.xml")))
+        data = db.get_author_by_name("sam")
+        self.assertTrue("sam" in data[0], "incorrect author name")
+
     def test_sort_author_by_name(self):
         db = database.Database()
         self.assertTrue(db.read(path.join(self.data_dir, "sprint-2-story-5.xml")))
-        header, data = db.get_sorted_author_by_name("sam")
+        data = db.sort_author_by_name("sam")
         self.assertEqual(data[0], "Alice Sam", "incorrect order, 1st author should be Alice Sam")
         self.assertEqual(data[1], "Brian Sam", "incorrect order, 2nd author should be Brian Sam")
         self.assertEqual(data[2], "Alice Samming", "incorrect order, 3rd author should be Alice Samming")
         self.assertEqual(data[3], "Brian Samming", "incorrect order, 4th author should be Brian Samming")
-        self.assertEqual(data[4], "Sam Alice", "incorrect order, 5th author should be Sam Alice")
-        self.assertEqual(data[5], "Sam Brian", "incorrect order, 6th author should be Sam Brian")
-        self.assertEqual(data[6], "Samuel Alice", "incorrect order, 7th author should be Samuel Alice")
-        self.assertEqual(data[7], "Samuel Brian", "incorrect order, 8th author should be Samuel Brian")
-        self.assertEqual(data[8], "Alice Esam", "incorrect order, 9th author should be Alice Esam")
-        self.assertEqual(data[9], "Brian Esam", "incorrect order, 10th author should be Brian Esam")
+        self.assertEqual(data[4], "Uli Samtler", "incorrect order, 4th author should be Uli Samtler")
+        self.assertEqual(data[5], "Sam Alice", "incorrect order, 5th author should be Sam Alice")
+        self.assertEqual(data[6], "Sam Brian", "incorrect order, 6th author should be Sam Brian")
+        self.assertEqual(data[7], "Samuel Alice", "incorrect order, 7th author should be Samuel Alice")
+        self.assertEqual(data[8], "Samuel Brian", "incorrect order, 8th author should be Samuel Brian")
+        self.assertEqual(data[9], "Alice Esam", "incorrect order, 9th author should be Alice Esam")
+        self.assertEqual(data[10], "Brian Esam", "incorrect order, 10th author should be Brian Esam")
 
     def test_get_average_publications_per_author_by_year(self):
         db = database.Database()
