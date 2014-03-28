@@ -1,3 +1,3 @@
 __author__ = 'CipherHat'
 
-wee = __file__
+file_path = __file__
