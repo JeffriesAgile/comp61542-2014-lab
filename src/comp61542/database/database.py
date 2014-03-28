@@ -481,6 +481,7 @@ class Database:
     def sort_author_by_name(self, name):
         data = [self.split_author_name(author) for author in self.get_author_by_name(name)]
 
+        # Lists for dividing before the sorting
         ln_exact = []
         ln_start = []
         ln_contain = []
@@ -489,8 +490,9 @@ class Database:
         fn_contain = []
         mn_all = []
 
-        lower_name = name.lower
+        lower_name = str(name).lower()
 
+        # Put every tuple in its correct list
         for a in data:
             low_ln = str(a[1]).lower()
             low_fn = str(a[2]).lower()
@@ -511,7 +513,24 @@ class Database:
             else:
                 mn_all.append(a)
 
-        return data
+        # Sort every list
+        ln_exact.sort(key=lambda tup: tup[0])
+        ln_start.sort(key=lambda tup: tup[0])
+        ln_contain.sort(key=lambda tup: tup[0])
+        fn_exact.sort(key=lambda tup: tup[0])
+        fn_start.sort(key=lambda tup: tup[0])
+        fn_contain.sort(key=lambda tup: tup[0])
+        mn_all.sort(key=lambda tup: tup[0])
+
+        # Merge all sorted lists
+        ln_exact.extend(ln_start)
+        ln_exact.extend(fn_exact)
+        ln_exact.extend(fn_start)
+        ln_exact.extend(ln_contain)
+        ln_exact.extend(fn_contain)
+        ln_exact.extend(mn_all)
+
+        return ln_exact
 
 class DocumentHandler(handler.ContentHandler):
     TITLE_TAGS = [ "sub", "sup", "i", "tt", "ref" ]
