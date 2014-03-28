@@ -260,7 +260,7 @@ class TestDatabase(unittest.TestCase):
         body = [['Conference Papers', 0, 0, 0, 0, 0], ['Journal', 0, 0, 0, 0, 0], ['Book', 0, 0, 0, 2, 1], ['Book Chapter', 0, 0, 0, 0, 0], ['All Publication', 0, 0, 0, 2, 1]]
         self.assertEqual(db.get_author_statistics_detailed_all("AUTHOR D"), (header, body), "The statistics detail for AUTHOR D is not right")
 
-    def test_author_by_name(self):
+    def test_get_author_by_name(self):
         db = database.Database()
         self.assertTrue(db.read(path.join(self.data_dir, "sprint-2-story-5.xml")))
         data = db.get_author_by_name("sam")
