@@ -2,11 +2,11 @@ from string import replace
 from comp61542 import app, mail, login_manager
 from database import database, models
 from visualization import network
-from flask import (render_template, request, send_file, flash, redirect, abort, url_for)
+from flask import (render_template, request, send_file, flash, redirect, abort, url_for, g)
 from werkzeug import exceptions
 from flask_mail import Message
 from forms import forms
-from flask_login import login_required, login_user, logout_user
+from flask_login import login_required, login_user, logout_user, current_user
 
 
 def format_data(data):
@@ -277,7 +277,7 @@ def login_form_handler():
 @app.route('/logout')
 def logout():
     logout_user()
-    return redirect(url_for('/'))
+    return redirect('/')
 
 @app.route('/register' , methods=['GET','POST'])
 def register():
@@ -288,3 +288,7 @@ def register():
     # db.session.commit()
     # flash('User successfully registered')
     # return redirect(url_for('login'))
+
+@app.before_request
+def before_request():
+    g.user = current_user
