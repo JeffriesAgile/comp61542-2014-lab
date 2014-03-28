@@ -481,6 +481,34 @@ class Database:
     def sort_author_by_name(self, name):
         data = [self.split_author_name(author) for author in self.get_author_by_name(name)]
 
+        ln_exact = []
+        ln_start = []
+        ln_contain = []
+        fn_exact = []
+        fn_start = []
+        fn_contain = []
+        mn_all = []
+
+        lower_name = name.lower
+
+        for a in data:
+            low_ln = str(a[1]).lower()
+            low_fn = str(a[2]).lower()
+            if low_ln==lower_name:
+                ln_exact.append(a)
+            elif low_ln.startswith(lower_name):
+                ln_start.append(a)
+            elif lower_name in low_ln:
+                ln_contain.append(a)
+            elif low_fn==lower_name:
+                fn_exact.append(a)
+            elif low_fn.startswith(lower_name):
+                fn_start.append(a)
+            elif lower_name in low_fn:
+                fn_contain.append(a)
+            else:
+                mn_all.append(a)
+
         return data
 
 class DocumentHandler(handler.ContentHandler):
