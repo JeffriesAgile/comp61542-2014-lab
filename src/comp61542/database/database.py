@@ -494,18 +494,20 @@ class Database:
         for a in data:
             low_ln = str(a[1]).lower()
             low_fn = str(a[2]).lower()
-            if low_ln==lower_name:
-                ln_exact.append(a)
-            elif low_ln.startswith(lower_name):
-                ln_start.append(a)
-            elif lower_name in low_ln:
-                ln_contain.append(a)
-            elif low_fn==lower_name:
-                fn_exact.append(a)
-            elif low_fn.startswith(lower_name):
-                fn_start.append(a)
-            elif lower_name in low_fn:
-                fn_contain.append(a)
+            if lower_name in low_ln:
+                if low_ln==lower_name:
+                    ln_exact.append(a)
+                elif low_ln.startswith(lower_name):
+                    ln_start.append(a)
+                else:
+                    ln_contain.append(a)
+            if lower_name in low_fn:
+                if low_fn==lower_name:
+                    fn_exact.append(a)
+                elif low_fn.startswith(lower_name):
+                    fn_start.append(a)
+                else:
+                    fn_contain.append(a)
             else:
                 mn_all.append(a)
 
