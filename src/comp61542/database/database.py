@@ -463,12 +463,23 @@ class Database:
         data = []
         for p in self.publications:
             for i in p.authors:
-                if name in self.authors[i].name:
+                if name.lower() in self.authors[i].name.lower():
                     data.append(self.authors[i].name)
         return data
 
+    def split_author_name(self, name):
+        split_name = str(name).split(" ")
+        split_len = len(split_name)
+
+        data = []
+        if split_len > 1:
+            data = [name, split_name[split_len-1], split_name[0]]
+        elif split_len == 1:
+            data = [name, split_name[0], ""]
+        return data
+
     def sort_author_by_name(self, name):
-        data = self.get_author_by_name(name)
+        data = [self.split_author_name(author) for author in self.get_author_by_name(name)]
 
         return data
 
