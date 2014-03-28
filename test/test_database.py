@@ -248,10 +248,18 @@ class TestDatabase(unittest.TestCase):
         # Testing exception case on the type index
         self.assertRaises(ValueError, lambda: db.get_author_statistics_detailed(0, 5))
 
-    def test_haha(self):
+    def test_get_author_statistics_detailed_all(self):
         db = database.Database()
-        self.assertTrue(db.read(path.join(self.data_dir, "dblp_curated_sample.xml")))
-        print db.get_author_statistics_detailed_all("Stefano Ceri")
+        self.assertTrue(db.read(path.join(self.data_dir, "test-author-stat-detailed.xml")))
+        header = ("", "First Author", "Last Author", "Sole Author", "Co-Authors", "All")
+        body = [['Conference Papers', 2, 0, 0, 2, 2], ['Journal', 0, 0, 0, 0, 0], ['Book', 0, 1, 1, 3, 3], ['Book Chapter', 0, 0, 0, 0, 0], ['All Publication', 2, 1, 1, 3, 5]]
+        self.assertEqual(db.get_author_statistics_detailed_all("AUTHOR A"), (header, body), "The statistics detail for AUTHOR A is not right")
+        body = [['Conference Papers', 0, 1, 0, 2, 2], ['Journal', 0, 0, 0, 0, 0], ['Book', 2, 0, 0, 3, 2], ['Book Chapter', 0, 0, 0, 0, 0], ['All Publication', 2, 1, 0, 3, 4]]
+        self.assertEqual(db.get_author_statistics_detailed_all("AUTHOR B"), (header, body), "The statistics detail for AUTHOR B is not right")
+        body = [['Conference Papers', 0, 1, 0, 2, 1], ['Journal', 0, 0, 0, 0, 0], ['Book', 0, 1, 0, 2, 1], ['Book Chapter', 0, 0, 0, 0, 0], ['All Publication', 0, 2, 0, 2, 2]]
+        self.assertEqual(db.get_author_statistics_detailed_all("AUTHOR C"), (header, body), "The statistics detail for AUTHOR C is not right")
+        body = [['Conference Papers', 0, 0, 0, 0, 0], ['Journal', 0, 0, 0, 0, 0], ['Book', 0, 0, 0, 2, 1], ['Book Chapter', 0, 0, 0, 0, 0], ['All Publication', 0, 0, 0, 2, 1]]
+        self.assertEqual(db.get_author_statistics_detailed_all("AUTHOR D"), (header, body), "The statistics detail for AUTHOR D is not right")
 
     def test_sort_author_by_name(self):
         db = database.Database()
