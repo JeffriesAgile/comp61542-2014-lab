@@ -8,6 +8,7 @@ from flask_mail import Message
 from forms import forms
 from flask_login import login_required, login_user, logout_user, current_user
 
+login_manager.login_view = "/"
 
 def format_data(data):
     fmt = "%.2f"
