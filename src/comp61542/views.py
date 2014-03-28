@@ -1,12 +1,12 @@
 from string import replace
-from flask.helpers import url_for
-from comp61542 import app, mail
-from database import database
+from comp61542 import app, mail, login_manager
+from database import database, models
 from visualization import network
-from flask import (render_template, request, send_file, flash, redirect, abort)
+from flask import (render_template, request, send_file, flash, redirect, abort, url_for)
 from werkzeug import exceptions
 from flask_mail import Message
 from forms import forms
+from flask_login import login_required, login_user, logout_user
 
 
 def format_data(data):
@@ -19,6 +19,9 @@ def format_data(data):
             result.append((fmt % item).rstrip('0').rstrip('.'))
     return result
 
+@login_manager.user_loader
+def load_user(id):
+    return models.User.query.get(int(id))
 
 @app.route("/averages", methods=['GET', 'POST'])
 def showAverages():
@@ -190,6 +193,7 @@ def showPublicationNetwork():
 
 
 @app.route("/about", methods=['GET', 'POST'])
+@login_required
 def about():
     args = {}
     contact_form_handler(args)
@@ -258,5 +262,29 @@ def login_form_handler():
                 flash("Login fail")
                 def_dict["login_success"] = False
             else:
-                def_dict["login_success"] = True
+                username = request.form['loginform-username']
+                password = request.form['loginform-password']
+                print username, password
+                registered_user = models.User.query.filter_by(username=username,password=password).first()
+                if registered_user is None:
+                    flash("Login fail")
+                    def_dict["login_success"] = False
+                else:
+                    login_user(registered_user)
+                    def_dict["login_success"] = True
     return dict(def_dict = def_dict)
+
+@app.route('/logout')
+def logout():
+    logout_user()
+    return redirect(url_for('/'))
+
+@app.route('/register' , methods=['GET','POST'])
+def register():
+    if request.method == 'GET':
+        return render_template('register.html')
+    # user = User(request.form['username'] , request.form['password'],request.form['email'])
+    # db.session.add(user)
+    # db.session.commit()
+    # flash('User successfully registered')
+    # return redirect(url_for('login'))

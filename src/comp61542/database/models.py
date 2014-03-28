@@ -7,7 +7,7 @@ ROLE_ADMIN = 1
 
 class User(auth_db.Model):
     id = auth_db.Column(auth_db.Integer, primary_key = True)
-    nickname = auth_db.Column(auth_db.String(64), unique = True)
+    username = auth_db.Column(auth_db.String(64), unique = True)
     password = auth_db.Column(auth_db.String(100), unique=False)
     email = auth_db.Column(auth_db.String(120), unique = True)
     role = auth_db.Column(auth_db.SmallInteger, default = ROLE_USER)
@@ -26,7 +26,7 @@ class User(auth_db.Model):
         return unicode(self.id)
 
     def __repr__(self):
-        return '<User %r>' % (self.nickname)
+        return '<User %r>' % (self.username)
 
 class Post(auth_db.Model):
     id = auth_db.Column(auth_db.Integer, primary_key = True)
