@@ -23,16 +23,21 @@
     <button type="button" class="navbar-toggle" data-toggle="collapse" data-target="#viewsigninform">Sign
         in &raquo;</button>
     <form class="navbar-form navbar-right navbar-collapse collapse" id="viewsigninform" role="form" action="{{ request.path }}" method=post>
-        {{ def_dict.loginform.hidden_tag() }}
-        {% if def_dict.login_success == False %}
-        <div class="form-group">{{ def_dict.loginform.username(class_='form-control-error', placeholder='Username') }}</div>
-        <div class="form-group">{{ def_dict.loginform.password(class_='form-control-error', placeholder='Password') }}</div>
-        {% else %}
-        <div class="form-group">{{ def_dict.loginform.username(class_='form-control', placeholder='Username') }}</div>
-        <div class="form-group">{{ def_dict.loginform.password(class_='form-control', placeholder='Password') }}</div>
+        {% if not g.user.is_authenticated()%}
+            {{ def_dict.loginform.hidden_tag() }}
+            {% if def_dict.login_success == False %}
+            <div class="form-group">{{ def_dict.loginform.username(class_='form-control-error', placeholder='Username') }}</div>
+            <div class="form-group">{{ def_dict.loginform.password(class_='form-control-error', placeholder='Password') }}</div>
+            {% else %}
+            <div class="form-group">{{ def_dict.loginform.username(class_='form-control', placeholder='Username') }}</div>
+            <div class="form-group">{{ def_dict.loginform.password(class_='form-control', placeholder='Password') }}</div>
+            {% endif %}
+            {{ def_dict.loginform.submit(class_='btn btn-default') }}
+            <br/>{{ def_dict.loginform.remember_me() }} {{ def_dict.loginform.remember_me.label(style='font-size: 12px;') }}
         {% endif %}
-        {{ def_dict.loginform.submit(class_='btn btn-default') }}
-        <br/>{{ def_dict.loginform.remember_me() }} {{ def_dict.loginform.remember_me.label(style='font-size: 12px;') }}
+        {% if g.user.is_authenticated()%}
+            <a href="/logout">Logout</a>
+        {% endif %}
     </form>
     <div class="navbar navbar-inverse" role="navigation">
         <div class="container-fluid">
