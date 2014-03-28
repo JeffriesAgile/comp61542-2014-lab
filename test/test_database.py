@@ -265,7 +265,9 @@ class TestDatabase(unittest.TestCase):
         db = database.Database()
         self.assertTrue(db.read(path.join(self.data_dir, "sprint-2-story-5.xml")))
         data = db.get_author_by_name("sam")
-        self.assertTrue("sam" in data[0], "incorrect author name")
+        if len(data)>0:
+            for i in range(0, len(data)-1):
+                self.assertIn("sam", data[i], "incorrect author name")
 
     def test_sort_author_by_name(self):
         db = database.Database()
