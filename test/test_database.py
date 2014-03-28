@@ -253,6 +253,21 @@ class TestDatabase(unittest.TestCase):
         self.assertTrue(db.read(path.join(self.data_dir, "dblp_curated_sample.xml")))
         print db.get_author_statistics_detailed_all("Stefano Ceri")
 
+    def test_sort_author_by_name(self):
+        db = database.Database()
+        self.assertTrue(db.read(path.join(self.data_dir, "sprint-2-story-5.xml")))
+        header, data = db.get_sorted_author_by_name("sam")
+        self.assertEqual(data[0], "Alice Sam", "incorrect order, 1st author should be Alice Sam")
+        self.assertEqual(data[1], "Brian Sam", "incorrect order, 2nd author should be Brian Sam")
+        self.assertEqual(data[2], "Alice Samming", "incorrect order, 3rd author should be Alice Samming")
+        self.assertEqual(data[3], "Brian Samming", "incorrect order, 4th author should be Brian Samming")
+        self.assertEqual(data[4], "Sam Alice", "incorrect order, 5th author should be Sam Alice")
+        self.assertEqual(data[5], "Sam Brian", "incorrect order, 6th author should be Sam Brian")
+        self.assertEqual(data[6], "Samuel Alice", "incorrect order, 7th author should be Samuel Alice")
+        self.assertEqual(data[7], "Samuel Brian", "incorrect order, 8th author should be Samuel Brian")
+        self.assertEqual(data[8], "Alice Esam", "incorrect order, 9th author should be Alice Esam")
+        self.assertEqual(data[9], "Brian Esam", "incorrect order, 10th author should be Brian Esam")
+
     def test_get_average_publications_per_author_by_year(self):
         db = database.Database()
         self.assertTrue(db.read(path.join(self.data_dir, "simple.xml")))
