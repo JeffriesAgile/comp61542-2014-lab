@@ -501,7 +501,7 @@ class Database:
                     ln_start.append(a)
                 else:
                     ln_contain.append(a)
-            if lower_name in low_fn:
+            elif lower_name in low_fn:
                 if low_fn==lower_name:
                     fn_exact.append(a)
                 elif low_fn.startswith(lower_name):
