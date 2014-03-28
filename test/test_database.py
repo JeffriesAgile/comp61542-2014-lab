@@ -284,29 +284,33 @@ class TestDatabase(unittest.TestCase):
         self.assertEqual(data[9], "Alice Esam", "incorrect order, 9th author should be Alice Esam")
         self.assertEqual(data[10], "Brian Esam", "incorrect order, 10th author should be Brian Esam")
         
-    def test_split_name(self):
+    def test_split_author_name(self):
         db = database.Database()
+        # Expected return: [full name, last name, first name]
         # No middlename
         data = db.split_name("Samuel Alexander")
-        self.assertEqual(len(data), 2, "There's a mismatch between the table length and the expected name split")
-        self.assertEqual(data[0], "Alexander", "The lastname is wrong")
-        self.assertEqual(data[1], "Samuel", "The firstname is wrong")
+        self.assertEqual(len(data), 3, "There's a mismatch between the table length and the expected name split")
+        self.assertEqual(data[0], "Samuel Alexander", "The full name is wrong")
+        self.assertEqual(data[1], "Alexander", "The last name is wrong")
+        self.assertEqual(data[2], "Samuel", "The first name is wrong")
         # One middlename
         data = db.split_name("Samuel Alexander Checkov")
         self.assertEqual(len(data), 3, "There's a mismatch between the table length and the expected name split")
-        self.assertEqual(data[0], "Checkov", "The lastname is wrong")
-        self.assertEqual(data[1], "Samuel", "The firstname is wrong")
-        self.assertEqual(data[2], "Alexander", "The middlename is wrong")
+        self.assertEqual(data[0], "Samuel Alexander Checkov", "The full name is wrong")
+        self.assertEqual(data[1], "Checkov", "The last name is wrong")
+        self.assertEqual(data[2], "Samuel", "The first name is wrong")
         # Two middlenames
         data = db.split_name("Leonard Alexander R. Qwerty")
         self.assertEqual(len(data), 3, "There's a mismatch between the table length and the expected name split")
-        self.assertEqual(data[0], "Qwerty", "The lastname is wrong")
-        self.assertEqual(data[1], "Leonard", "The firstname is wrong")
-        self.assertEqual(data[2], "Alexander R.", "The middlename is wrong")
+        self.assertEqual(data[0], "Leonard Alexander R. Qwerty", "The full name is wrong")
+        self.assertEqual(data[1], "Qwerty", "The last name is wrong")
+        self.assertEqual(data[2], "Leonard", "The first name is wrong")
         # Special case: only one name
         data = db.split_name("Uli")
-        self.assertEqual(len(data), 1, "There's a mismatch between the table length and the expected name split")
+        self.assertEqual(len(data), 3, "There's a mismatch between the table length and the expected name split")
         self.assertEqual(data[0], "Uli", "The name is wrong")
+        self.assertEqual(data[1], "Uli", "The name is wrong")
+        self.assertEqual(data[2], "", "The special case is not well handled")
         
     def test_get_average_publications_per_author_by_year(self):
         db = database.Database()
