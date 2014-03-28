@@ -1,3 +1,4 @@
+from string import replace
 from flask.helpers import url_for
 from comp61542 import app, mail
 from database import database
@@ -140,12 +141,17 @@ def showPublicationSummary(status):
         args["title"] = "Author by Year"
         args["data"] = db.get_author_totals_by_year()
 
-    if (status == "author_statistics"):
-        args["title"] = "Author Statistics"
-        args["data"] = db.get_author_statistics_with_sole()
-
     args["status"] = status
 
+    return render_template('statistics_details.html', args=args)
+
+@app.route("/author_profile/<name>", methods=['GET', 'POST'])
+def authorProfile(name):
+    db = app.config['DATABASE']
+    handled_name = replace(name, "%20", " ")
+    args = {}
+    args["title"] = handled_name
+    args["data"] = db.get_author_statistics_detailed_all(handled_name)
     return render_template('statistics_details.html', args=args)
 
 @app.route("/author_statistics", methods=['GET', 'POST'])
@@ -244,10 +250,9 @@ EMAIL GENERATED FROM JEFFRIES ABOUT PAGE. DO NOT REPLY TO THIS EMAIL. REPLY TO T
 # the first method to be invoked before every page rendering - returning and handling login form
 @app.context_processor
 def login_form_handler():
-    print exceptions.MethodNotAllowed.code
     loginform = forms.LoginForm(prefix="loginform")
     def_dict = {'loginform':loginform}
-    if request.method == 'POST':
+    if request.method == 'POST' and "loginform-username" in request.form:
         if 'loginform-submit' in request.form:
             if loginform.validate() == False:
                 flash("Login fail")
