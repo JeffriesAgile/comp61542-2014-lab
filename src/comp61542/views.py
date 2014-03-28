@@ -178,6 +178,18 @@ def showAuthorStatistics():
     return render_template('author_statistics.html', args=args)
 
 
+@app.route("/search", methods=['GET', 'POST'])
+def searchAuthor():
+    dataset = app.config['DATASET']
+    db = app.config['DATABASE']
+    args = {"dataset": dataset, "id": "search"}
+
+    args["title"] = "Search Author"
+    args["data"] = db.sort_author_by_name(request.args.get('name',''))
+
+    return render_template('search.html', args=args)
+
+
 @app.route("/network", methods=['GET', 'POST'])
 def showPublicationNetwork():
     dataset = app.config['DATASET']
@@ -194,7 +206,6 @@ def showPublicationNetwork():
 
 
 @app.route("/about", methods=['GET', 'POST'])
-@login_required
 def about():
     args = {}
     contact_form_handler(args)

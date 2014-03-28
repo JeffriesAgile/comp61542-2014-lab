@@ -1,0 +1,21 @@
+{% extends "base.html" %}
+{% block title %}{{ args.title }}{% endblock %}
+{% block content %}
+
+<h1>{{ args.title }}</h1>
+
+<form name="input" action="/search" method="get" data-ajax="false">
+    Author name:
+    <input type="text" name="name" value="{{ request.args.get('name','') }}" >
+    <input type="submit" value="Submit">
+</form>
+<br />
+<ul>
+    {% for author in args.data %}
+    <li>
+        <a href="/author_profile/{{ author[0] }}">{{ author[0] }}</a>
+    </li>
+    {% endfor %}
+</ul>
+
+{% endblock %}

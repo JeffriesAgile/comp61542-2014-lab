@@ -463,8 +463,9 @@ class Database:
         data = []
         for p in self.publications:
             for i in p.authors:
-                if name.lower() in self.authors[i].name.lower():
-                    data.append(self.authors[i].name)
+                if str(name).lower() in str(self.authors[i].name).lower():
+                    if self.authors[i].name not in data:
+                        data.append(self.authors[i].name)
         return data
 
     def split_author_name(self, name):
@@ -479,6 +480,9 @@ class Database:
         return data
 
     def sort_author_by_name(self, name):
+        if len(str(name)) < 2:
+            return []
+
         data = [self.split_author_name(author) for author in self.get_author_by_name(name)]
 
         # Lists for dividing before the sorting
