@@ -2,24 +2,46 @@
 <html>
 
 <head>
-    <title>Wahahaha</title>
+    <title>{% block title %}{% endblock %}</title>
 
     <!-- Bootstrap core CSS -->
-    <link href="css/bootstrap.css" rel="stylesheet">
+    <link href="{{ url_for('static', filename='css/bootstrap.css') }}" rel="stylesheet">
 
     <!-- Custom styles for this template -->
-    <link href="css/navbar.css" rel="stylesheet">
+    <link href="{{ url_for('static', filename='css/navbar.css') }}" rel="stylesheet">
     <script src="//ajax.googleapis.com/ajax/libs/jquery/1.8.2/jquery.min.js"></script>
     <script src="//netdna.bootstrapcdn.com/bootstrap/3.1.1/js/bootstrap.min.js"></script>
 
-    <link href="css/jeffries.css" rel="stylesheet">
+    <link href="{{ url_for('static', filename='css/jeffries.css') }}" rel="stylesheet">
 </head>
 
 <body>
 <div class="container">
     <!-- Static navbar -->
-    <a href="/"><img src="images/universitylogo.png"
+    <a href="/"><img src="{{ url_for('static', filename='images/universitylogo.png') }}"
                      style="width:150px; margin-bottom:10px;"/></a>
+    <button type="button" class="navbar-toggle" data-toggle="collapse" data-target="#viewsigninform">Sign
+        in &raquo;</button>
+    <form class="navbar-form navbar-right navbar-collapse collapse" id="viewsigninform" role="form"
+          action="{{ request.path }}" method=post>
+        {% if not g.user.is_authenticated()%}
+        {{ def_dict.loginform.hidden_tag() }}
+        {% if def_dict.login_success == False %}
+        <div class="form-group">{{ def_dict.loginform.username(class_='form-control-error', placeholder='Username') }}
+        </div>
+        <div class="form-group">{{ def_dict.loginform.password(class_='form-control-error', placeholder='Password') }}
+        </div>
+        {% else %}
+        <div class="form-group">{{ def_dict.loginform.username(class_='form-control', placeholder='Username') }}</div>
+        <div class="form-group">{{ def_dict.loginform.password(class_='form-control', placeholder='Password') }}</div>
+        {% endif %}
+        {{ def_dict.loginform.submit(class_='btn btn-default') }}
+        <br/>{{ def_dict.loginform.remember_me() }} {{ def_dict.loginform.remember_me.label(style='font-size: 12px;') }}
+        {% endif %}
+        {% if g.user.is_authenticated()%}
+        <a href="/logout">Logout</a>
+        {% endif %}
+    </form>
     <div class="navbar navbar-inverse" role="navigation">
         <div class="container-fluid">
             <div class="navbar-header">
@@ -38,15 +60,20 @@
                                 class="caret"></b></a>
                         <ul class="dropdown-menu">
                             <li><a href="/statisticsdetails/publication_author">Publication by Author</a></li>
+                            <li><a href="/author_statistics">Author Statistics</a></li>
+                            <li class="divider"></li>
                             <li><a href="/statisticsdetails/publication_year">Publication by Year</a></li>
                             <li><a href="/statisticsdetails/author_year">Author by Year</a></li>
-                            <li><a href="/author_statistics">Author Statistics</a></li>
-                            <!--<li class="divider"></li>-->
+                            <li class="divider"></li>
+                            <li><a href="/coauthors">Co-Authors</a></li>
                         </ul>
                     </li>
+                    <li><a href="/search">Search Author</a></li>
                     <li><a href="/averages">Averaged Year Data</a></li>
-                    <li><a href="/coauthors">Co-Authors</a></li>
                     <li><a href="/network">Publication Network</a></li>
+                    {% if g.user.is_authenticated() and g.user.role == 1 %}
+                    <li><a href="/admin">Admin</a></li>
+                    {% endif %}
                 </ul>
             </div>
         </div>
@@ -55,7 +82,7 @@
 
     <div id="page">
         <div id="content">
-            Ruvin Yusubov God
+            {% block content %}{% endblock %}
         </div>
     </div>
     <hr>
