@@ -243,14 +243,14 @@ class Database:
         return (header, data)
 
     def get_author_statistics_with_sole(self, pub_type):
-        header = ("Author", "First author", "Last author", "Co-author", "Sole author", "Total", "Last name")
+        header = ("Author", "First author", "Last author", "Sole author", "Other", "Total", "Last name")
 
         astats = [ [0, 0, 0, 0] for _ in range(len(self.authors)) ]
         for p in self.publications:
             for a in p.authors:
                 if pub_type == 4 or pub_type == p.pub_type:
                     if len(p.authors) == 1:
-                        astats[a][3] += 1
+                        astats[a][2] += 1
                     else:
                         if a == p.authors[0] or a == p.authors[len(p.authors)-1]:
                             if a == p.authors[0]:
@@ -258,7 +258,7 @@ class Database:
                             if a == p.authors[len(p.authors)-1]:
                                 astats[a][1] += 1
                         else:
-                            astats[a][2] += 1
+                            astats[a][3] += 1
 
         data = [ [self.authors[i].name] + astats[i] + [sum(astats[i])] +
                  [self.authors[i].name.split(" ")[len(self.authors[i].name.split(" "))-1]]
