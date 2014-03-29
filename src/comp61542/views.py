@@ -10,6 +10,7 @@ from flask_login import login_required, login_user, logout_user, current_user
 
 login_manager.login_view = "/login"
 
+
 def format_data(data):
     fmt = "%.2f"
     result = []
@@ -20,9 +21,11 @@ def format_data(data):
             result.append((fmt % item).rstrip('0').rstrip('.'))
     return result
 
+
 @login_manager.user_loader
 def load_user(id):
     return models.User.query.get(int(id))
+
 
 @app.route("/averages", methods=['GET', 'POST'])
 def showAverages():
@@ -149,6 +152,7 @@ def showPublicationSummary(status):
 
     return render_template('statistics_details.html', args=args)
 
+
 @app.route("/author_profile/<name>", methods=['GET', 'POST'])
 def authorProfile(name):
     db = app.config['DATABASE']
@@ -157,6 +161,7 @@ def authorProfile(name):
     args["title"] = handled_name
     args["data"] = db.get_author_statistics_detailed_all(handled_name)
     return render_template('statistics_details.html', args=args)
+
 
 @app.route("/author_statistics", methods=['GET', 'POST'])
 def showAuthorStatistics():
@@ -185,7 +190,7 @@ def searchAuthor():
     args = {"dataset": dataset, "id": "search"}
 
     args["title"] = "Search Author"
-    args["data"] = db.sort_author_by_name(request.args.get('name',''))
+    args["data"] = db.sort_author_by_name(request.args.get('name', ''))
 
     return render_template('search.html', args=args)
 
@@ -237,7 +242,7 @@ def errorHandler(error):
     elif type(error) == exceptions.InternalServerError:
         title = "500"
         data = "Oops, this time it is our fault. Something went wrong, and we will fix it. If this causes you fatal problem, report us at"
-    request.path="/" #so if HTTP method POST are invoked (e.g login submit action) on error page, it will be redirected to index page instead
+    request.path = "/"  #so if HTTP method POST are invoked (e.g login submit action) on error page, it will be redirected to index page instead
     args = {"title": title, "data": data, "email": email}
     return render_template('error.html', args=args)
 
@@ -268,37 +273,26 @@ EMAIL GENERATED FROM JEFFRIES ABOUT PAGE. DO NOT REPLY TO THIS EMAIL. REPLY TO T
 @app.context_processor
 def init_process():
     loginform = forms.LoginForm(prefix="loginform")
-    def_dict = {'loginform':loginform}
+    def_dict = {'loginform': loginform}
     if request.method == 'POST' and "loginform-username" in request.form:
-        if 'loginform-submit' in request.form:
-            def_dict["login_success"] = login_form_handler(loginform)
-    return dict(def_dict = def_dict)
+        def_dict["login_success"] = login_form_handler(loginform)
+    return dict(def_dict=def_dict)
+
 
 def login_form_handler(loginform):
     if loginform.validate():
-        username = request.form['loginform-username']
-        password = request.form['loginform-password']
+        username = request.form[loginform.username.name]
+        password = request.form[loginform.password.name]
         remember_me = False
-        if 'loginform-remember_me' in request.form:
+        if loginform.remember_me.name in request.form:
             remember_me = True
-        registered_user = models.User.query.filter_by(username=username,password=password).first()
+        registered_user = models.User.query.filter_by(username=username, password=password).first()
         if registered_user is not None:
             flash("Login success")
             login_user(registered_user, remember=remember_me)
             return True
     flash("Login fail")
     return False
-
-@app.route('/login', methods=['GET','POST'])
-def login():
-    loginform = forms.LoginForm(prefix="loginform")
-    args = {'loginform':loginform}
-    if request.method == 'POST' and "loginform-username" in request.form:
-        if 'loginform-submit' in request.form:
-            args["login_success"] = login_form_handler(loginform)
-            if args["login_success"] == True:
-                return redirect(request.args.get("next") or "/")
-    return render_template('login.html', args = args)
 
 
 @app.route('/logout')
@@ -307,15 +301,16 @@ def logout():
     return redirect('/')
 
 
-@app.route('/register', methods=['GET','POST'])
+@app.route('/register', methods=['GET', 'POST'])
 def register():
     if request.method == 'GET':
         return render_template('register.html')
-    # user = User(request.form['username'] , request.form['password'],request.form['email'])
-    # db.session.add(user)
-    # db.session.commit()
-    # flash('User successfully registered')
-    # return redirect(url_for('login'))
+        # user = User(request.form['username'] , request.form['password'],request.form['email'])
+        # db.session.add(user)
+        # db.session.commit()
+        # flash('User successfully registered')
+        # return redirect(url_for('login'))
+
 
 @app.before_request
 def before_request():
