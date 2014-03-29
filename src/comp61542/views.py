@@ -277,14 +277,14 @@ def login_form_handler():
                 username = request.form['loginform-username']
                 password = request.form['loginform-password']
                 remember_me = False
-                if 'remember_me' in request.form:
+                if 'loginform-remember_me' in request.form:
                     remember_me = True
                 registered_user = models.User.query.filter_by(username=username,password=password).first()
                 if registered_user is None:
                     flash("Login fail")
                     def_dict["login_success"] = False
                 else:
-                    login_user(registered_user)
+                    login_user(registered_user, remember=remember_me)
                     def_dict["login_success"] = True
     return dict(def_dict = def_dict)
 
