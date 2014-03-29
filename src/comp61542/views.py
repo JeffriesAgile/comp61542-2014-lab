@@ -224,25 +224,20 @@ def about():
 @app.errorhandler(410)
 @app.errorhandler(500)
 def errorHandler(error):
-    title = str(error)
+    title = str(error.code)
     data = ""
     email = "dumbastic@gmail.com"
-    if type(error) == exceptions.NotFound:
-        title = "404"
+    if title == str(exceptions.NotFound.code):
         data = "Sorry, the page you are looking for may have been removed, deleted or it was never there! Maybe you should check the URL properly and try again. However, if you feel this is a fault on our side (or you just love to argue), report us at"
-    elif type(error) == exceptions.Forbidden:
-        title = "403"
+    elif title == str(exceptions.Forbidden.code):
         data = "Sorry, you dont have permission to access this page. Maybe you should log in first, or you just dont have the privilege to access this area. However, if you feel this is a fault on our side (or you just love to argue), report us at"
-    elif type(error) == exceptions.MethodNotAllowed:
-        title = "405"
+    elif title == str(exceptions.MethodNotAllowed.code):
         data = "Sorry, the method you are trying to invoke are not allowed. Maybe you should you should try to do whatever you want to do on a different page. However, if you feel this is a fault on our side (or you just love to argue), report us at"
-    elif type(error) == exceptions.Gone:
-        title = "410"
+    elif title == str(exceptions.Gone.code):
         data = "Sorry, the page you are looking for has been removed. You are out of luck. However, if you feel this is a fault on our side (or you just love to argue), report us at"
-    elif type(error) == exceptions.InternalServerError:
-        title = "500"
+    elif title == str(exceptions.InternalServerError.code):
         data = "Oops, this time it is our fault. Something went wrong, and we will fix it. If this causes you fatal problem, report us at"
-    request.path = "/"  #so if HTTP method POST are invoked (e.g login submit action) on error page, it will be redirected to index page instead
+    request.path = "/" #so if HTTP method POST are invoked (e.g login submit action) on error page, it will be redirected to index page instead
     args = {"title": title, "data": data, "email": email}
     return render_template('error.html', args=args)
 
