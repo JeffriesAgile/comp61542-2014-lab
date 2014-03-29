@@ -211,7 +211,6 @@ def showPublicationNetwork():
 
 
 @app.route("/about", methods=['GET', 'POST'])
-@login_required
 def about():
     args = {}
     contact_form_handler(args)
