@@ -67,6 +67,9 @@
                     <li><a href="/averages">Averaged Year Data</a></li>
                     <li><a href="/coauthors">Co-Authors</a></li>
                     <li><a href="/network">Publication Network</a></li>
+                    {% if g.user.is_authenticated() and g.user.role == 1 %}
+                        <li><a href="/admin">Admin</a></li>
+                    {% endif %}
                 </ul>
             </div>
         </div>
