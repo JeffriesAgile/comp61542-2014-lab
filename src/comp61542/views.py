@@ -293,10 +293,6 @@ def logout():
     logout_user()
     return redirect('/')
 
-@app.route('/admin')
-@login_required
-def admin():
-    return redirect('/admin/')
 
 @app.route('/register' , methods=['GET','POST'])
 def register():
