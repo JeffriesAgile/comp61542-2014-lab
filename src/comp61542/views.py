@@ -8,7 +8,7 @@ from flask_mail import Message
 from forms import forms
 from flask_login import login_required, login_user, logout_user, current_user
 
-login_manager.login_view = "/"
+login_manager.login_view = "/login"
 
 def format_data(data):
     fmt = "%.2f"
@@ -206,6 +206,7 @@ def showPublicationNetwork():
 
 
 @app.route("/about", methods=['GET', 'POST'])
+@login_required
 def about():
     args = {}
     contact_form_handler(args)
@@ -265,28 +266,40 @@ EMAIL GENERATED FROM JEFFRIES ABOUT PAGE. DO NOT REPLY TO THIS EMAIL. REPLY TO T
 
 # the first method to be invoked before every page rendering - returning and handling login form
 @app.context_processor
-def login_form_handler():
+def init_process():
     loginform = forms.LoginForm(prefix="loginform")
     def_dict = {'loginform':loginform}
     if request.method == 'POST' and "loginform-username" in request.form:
         if 'loginform-submit' in request.form:
-            if loginform.validate() == False:
-                flash("Login fail")
-                def_dict["login_success"] = False
-            else:
-                username = request.form['loginform-username']
-                password = request.form['loginform-password']
-                remember_me = False
-                if 'loginform-remember_me' in request.form:
-                    remember_me = True
-                registered_user = models.User.query.filter_by(username=username,password=password).first()
-                if registered_user is None:
-                    flash("Login fail")
-                    def_dict["login_success"] = False
-                else:
-                    login_user(registered_user, remember=remember_me)
-                    def_dict["login_success"] = True
+            def_dict["login_success"] = login_form_handler(loginform)
     return dict(def_dict = def_dict)
+
+def login_form_handler(loginform):
+    if loginform.validate():
+        username = request.form['loginform-username']
+        password = request.form['loginform-password']
+        remember_me = False
+        if 'loginform-remember_me' in request.form:
+            remember_me = True
+        registered_user = models.User.query.filter_by(username=username,password=password).first()
+        if registered_user is not None:
+            flash("Login success")
+            login_user(registered_user, remember=remember_me)
+            return True
+    flash("Login fail")
+    return False
+
+@app.route('/login', methods=['GET','POST'])
+def login():
+    loginform = forms.LoginForm(prefix="loginform")
+    args = {'loginform':loginform}
+    if request.method == 'POST' and "loginform-username" in request.form:
+        if 'loginform-submit' in request.form:
+            args["login_success"] = login_form_handler(loginform)
+            if args["login_success"] == True:
+                return redirect(request.args.get("next") or "/")
+    return render_template('login.html', args = args)
+
 
 @app.route('/logout')
 def logout():
@@ -298,7 +311,7 @@ def logout():
 def admin():
     return redirect('/admin/')
 
-@app.route('/register' , methods=['GET','POST'])
+@app.route('/register', methods=['GET','POST'])
 def register():
     if request.method == 'GET':
         return render_template('register.html')
