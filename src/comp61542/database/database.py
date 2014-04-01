@@ -212,14 +212,17 @@ class Database:
     def get_publications_by_author(self):
         header = ("Author", "Number of conference papers",
             "Number of journals", "Number of books",
-            "Number of book chapers", "Total")
+            "Number of book chapers", "Total", "Last name")
+        #!DOMMY! this is where i replaced it. i added "Last name" column for your cheating hidden last name method
 
         astats = [ [0, 0, 0, 0] for _ in range(len(self.authors)) ]
         for p in self.publications:
             for a in p.authors:
                 astats[a][p.pub_type] += 1
 
-        data = [ [self.authors[i].name] + astats[i] + [sum(astats[i])]
+        #!DOMMY! i copied your cheating hidden last name code in get_author_statistics_with_sole method
+        data = [ [self.authors[i].name] + astats[i] + [sum(astats[i])]+
+                 [self.authors[i].name.split(" ")[len(self.authors[i].name.split(" "))-1]]
             for i in range(len(astats)) ]
         return (header, data)
 

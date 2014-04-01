@@ -121,6 +121,7 @@ def showPublicationSummary(status):
     dataset = app.config['DATASET']
     db = app.config['DATABASE']
     args = {"dataset": dataset, "id": status}
+    template = 'statistics_details.html'
 
     start_year = db.min_year
     if "start_year" in request.args:
@@ -138,7 +139,10 @@ def showPublicationSummary(status):
 
     if (status == "publication_author"):
         args["title"] = "Author Publication"
+        # !DOMMY! I modified db.get_publications_by_author to match your "cheating" hidden last name in author
+        # statistics method db.get_author_statistics_with_sole
         args["data"] = db.get_publications_by_author()
+        template='author_statistics.html'
 
     if (status == "publication_year"):
         args["title"] = "Publication by Year"
@@ -148,9 +152,23 @@ def showPublicationSummary(status):
         args["title"] = "Author by Year"
         args["data"] = db.get_author_totals_by_year()
 
+    # !DOMMY! This if block replaces showAuthorStatistics method @app.route("/author_statistics" so the template HTML
+    # used is determined by the template variable. default statistics_details.html. special cases for author_statistics
+    # and publication_author uses author_statistics.html
+    if (status == "author_statistics"):
+        PUB_TYPES = ["Conference Papers", "Journals", "Books", "Book Chapters", "All Publications"]
+        args["title"] = "Author Statistics"
+        pub_type = 4
+        if "pub_type" in request.args:
+            pub_type = int(request.args.get("pub_type"))
+        args["data"] = db.get_author_statistics_with_sole(pub_type)
+        args["pub_type"] = pub_type
+        args["pub_str"] = PUB_TYPES[pub_type]
+        template='author_statistics.html'
+
     args["status"] = status
 
-    return render_template('statistics_details.html', args=args)
+    return render_template(template, args=args)
 
 
 @app.route("/author_profile/<name>", methods=['GET', 'POST'])
