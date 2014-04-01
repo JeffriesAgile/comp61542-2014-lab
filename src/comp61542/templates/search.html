@@ -6,16 +6,19 @@
 
 <form name="input" action="/search" method="get" data-ajax="false">
     Author name:
-    <input type="text" name="name" value="{{ request.args.get('name','') }}" >
+    <input type="text" name="name" value="{{ request.args.get('name','') }}">
     <input type="submit" value="Submit">
 </form>
-<br />
-<ul>
-    {% for author in args.data %}
-    <li>
-        <a href="/author_profile/{{ author[0] }}">{{ author[0] }}</a>
-    </li>
-    {% endfor %}
+<br/>
+<ul>{% if request.args.get("name")|string != "None" and args.data|length == 0 %}
+        <p>Your search result returns nothing</p>
+    {% else %}
+        {% for author in args.data %}
+        <li>
+            <a href="/author_profile/{{ author[0] }}">{{ author[0] }}</a>
+        </li>
+        {% endfor %}
+    {% endif %}
 </ul>
 
 {% endblock %}
