@@ -210,6 +210,10 @@ def searchAuthor():
     args["title"] = "Search Author"
     args["data"] = db.sort_author_by_name(request.args.get('name', ''))
 
+    # if db.sort_author_by_name returns only 1 result, redirect to the author's page directly
+    if len(args["data"]) == 1:
+        return redirect("/author_profile/"+ str(args["data"][0][0]))
+
     return render_template('search.html', args=args)
 
 
