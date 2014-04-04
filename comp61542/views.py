@@ -121,6 +121,7 @@ def showPublicationSummary(status):
     dataset = app.config['DATASET']
     db = app.config['DATABASE']
     args = {"dataset": dataset, "id": status}
+    template = 'statistics_details.html'
 
     start_year = db.min_year
     if "start_year" in request.args:
@@ -138,7 +139,10 @@ def showPublicationSummary(status):
 
     if (status == "publication_author"):
         args["title"] = "Author Publication"
+        # !DOMMY! I modified db.get_publications_by_author to match your "cheating" hidden last name in author
+        # statistics method db.get_author_statistics_with_sole
         args["data"] = db.get_publications_by_author()
+        template='author_statistics.html'
 
     if (status == "publication_year"):
         args["title"] = "Publication by Year"
@@ -148,9 +152,23 @@ def showPublicationSummary(status):
         args["title"] = "Author by Year"
         args["data"] = db.get_author_totals_by_year()
 
+    # !DOMMY! This if block replaces showAuthorStatistics method @app.route("/author_statistics" so the template HTML
+    # used is determined by the template variable. default statistics_details.html. special cases for author_statistics
+    # and publication_author uses author_statistics.html
+    if (status == "author_statistics"):
+        PUB_TYPES = ["Conference Papers", "Journals", "Books", "Book Chapters", "All Publications"]
+        args["title"] = "Author Statistics"
+        pub_type = 4
+        if "pub_type" in request.args:
+            pub_type = int(request.args.get("pub_type"))
+        args["data"] = db.get_author_statistics_with_sole(pub_type)
+        args["pub_type"] = pub_type
+        args["pub_str"] = PUB_TYPES[pub_type]
+        template='author_statistics.html'
+
     args["status"] = status
 
-    return render_template('statistics_details.html', args=args)
+    return render_template(template, args=args)
 
 
 @app.route("/author_profile/<name>", methods=['GET', 'POST'])
@@ -192,6 +210,10 @@ def searchAuthor():
     args["title"] = "Search Author"
     args["data"] = db.sort_author_by_name(request.args.get('name', ''))
 
+    # if db.sort_author_by_name returns only 1 result, redirect to the author's page directly
+    if len(args["data"]) == 1:
+        return redirect("/author_profile/"+ str(args["data"][0][0]))
+
     return render_template('search.html', args=args)
 
 
@@ -211,6 +233,7 @@ def showPublicationNetwork():
 
 
 @app.route("/about", methods=['GET', 'POST'])
+@login_required
 def about():
     args = {}
     contact_form_handler(args)
@@ -223,25 +246,20 @@ def about():
 @app.errorhandler(410)
 @app.errorhandler(500)
 def errorHandler(error):
-    title = str(error)
+    title = str(error.code)
     data = ""
     email = "dumbastic@gmail.com"
-    if type(error) == exceptions.NotFound:
-        title = "404"
+    if title == str(exceptions.NotFound.code):
         data = "Sorry, the page you are looking for may have been removed, deleted or it was never there! Maybe you should check the URL properly and try again. However, if you feel this is a fault on our side (or you just love to argue), report us at"
-    elif type(error) == exceptions.Forbidden:
-        title = "403"
+    elif title == str(exceptions.Forbidden.code):
         data = "Sorry, you dont have permission to access this page. Maybe you should log in first, or you just dont have the privilege to access this area. However, if you feel this is a fault on our side (or you just love to argue), report us at"
-    elif type(error) == exceptions.MethodNotAllowed:
-        title = "405"
+    elif title == str(exceptions.MethodNotAllowed.code):
         data = "Sorry, the method you are trying to invoke are not allowed. Maybe you should you should try to do whatever you want to do on a different page. However, if you feel this is a fault on our side (or you just love to argue), report us at"
-    elif type(error) == exceptions.Gone:
-        title = "410"
+    elif title == str(exceptions.Gone.code):
         data = "Sorry, the page you are looking for has been removed. You are out of luck. However, if you feel this is a fault on our side (or you just love to argue), report us at"
-    elif type(error) == exceptions.InternalServerError:
-        title = "500"
+    elif title == str(exceptions.InternalServerError.code):
         data = "Oops, this time it is our fault. Something went wrong, and we will fix it. If this causes you fatal problem, report us at"
-    request.path = "/"  #so if HTTP method POST are invoked (e.g login submit action) on error page, it will be redirected to index page instead
+    request.path = "/" #so if HTTP method POST are invoked (e.g login submit action) on error page, it will be redirected to index page instead
     args = {"title": title, "data": data, "email": email}
     return render_template('error.html', args=args)
 

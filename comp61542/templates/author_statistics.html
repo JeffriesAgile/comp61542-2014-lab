@@ -4,6 +4,7 @@
 
 <h1>{{ args.title }}</h1>
 
+{% if args.title == "Author Statistics" %}
 <form name="input" action="/author_statistics" method="get" data-ajax="false">
     Publication type:
 
@@ -21,6 +22,7 @@
 
     <input type="submit" value="Submit">
 </form>
+{% endif %}
 
 <link rel="stylesheet" type="text/css" href="{{ url_for('static', filename='css/dataTables.bootstrap.css') }}">
 <script type="text/javascript"
@@ -76,9 +78,11 @@
         <tbody>
         {% for row in args.data[1] %}
         <tr>
-            {% for data_item in row %}
-            <td {% if data_item == row[row|length-1] %} style="display:none"{% endif %}>
-                {{ data_item }}</td>
+            <!-- !DOMMY! I modified this part to make the first column(name) clickable -->
+            <td><a href="/author_profile/{{ row[0] }}">{{ row [0] }}</a></td>
+            {% for x in range(1, row|length ) %}
+            <td {% if x == row|length-1 %} style="display:none"{% endif %}>
+                {{ row[x] }}</td>
             {% endfor %}
         </tr>
         {% endfor %}
