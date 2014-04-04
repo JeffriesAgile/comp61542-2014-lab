@@ -110,7 +110,7 @@ class TestDatabase(unittest.TestCase):
             "header and data column size doesn't match")
         self.assertEqual(len(data), 2,
             "incorrect number of authors")
-        self.assertEqual(data[0][-1], 1,
+        self.assertEqual(data[0][-2], 1,
             "incorrect total")
 
     def test_get_author_statistics(self):
@@ -319,8 +319,8 @@ class TestDatabase(unittest.TestCase):
         self.assertEqual(db.get_degree_of_separation("Author C", "Author D"), 1, "Incorrect DoS between C and D")
         self.assertEqual(db.get_degree_of_separation("Author A", "Author B"), 0, "Incorrect DoS between A and B")
         self.assertEqual(db.get_degree_of_separation("Author E", "Author C"), 2, "Incorrect DoS between E and C")
-        self.assertEqual(db.get_degree_of_separation("Author A", "Author F"), -1, "Incorrect DoS between A and F")
-        
+        self.assertEqual(db.get_degree_of_separation("Author A", "Author F"), "X", "Incorrect DoS between A and F")
+
     def test_get_average_publications_per_author_by_year(self):
         db = database.Database()
         self.assertTrue(db.read(path.join(self.data_dir, "simple.xml")))

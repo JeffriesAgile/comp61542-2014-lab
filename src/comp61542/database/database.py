@@ -2,6 +2,7 @@ from comp61542.statistics import average
 import itertools
 import numpy as np
 from xml.sax import handler, make_parser, SAXException
+from networkx import Graph, NetworkXError, NetworkXNoPath, shortest_path_length
 
 PublicationType = [
     "Conference Paper", "Journal", "Book", "Book Chapter"]
@@ -58,6 +59,7 @@ class Database:
             if self.max_year == None or p.year > self.max_year:
                 self.max_year = p.year
 
+        self.authors_graph = self._build_authors_graph()
         return valid
 
     def get_all_authors(self):
@@ -269,6 +271,25 @@ class Database:
         return (header, data)
 
     def get_author_statistics_detailed_all(self, name):
+        """
+        Built on top of get_author_statistics_detailed method, it gets all detailed statistics for one particular
+        author with customisation of each publication type name on each data row. (Conference Paper, Journal, Book, Book
+        Chapter, All Publication)
+
+        @author 1: CipherHat
+
+        @type  name: String
+        @param name: Name of the author. Example: "Author A"
+
+        @rtype:   dict
+        @return:  Returns all type of publication data, in the format of [header,data[[x,y0,y1,y2,y3,y4],[x,y0,y1,y2,y3,y4],...]]
+                    x = The string name of publication type e.g: Conference Papers
+                    y0 = The number of publications the author appears first
+                    y1 = The number of publications the author appears last
+                    y2 = The number of publications the author has sole ownership
+                    y3 = The number of co-authors for the author
+                    y4 = The number of overall publications for the author
+        """
         header = ("", "First Author", "Last Author", "Sole Author", "Co-Authors", "All")
         title = ["Conference Papers", "Journal", "Book", "Book Chapter", "All Publication"]
         data = []
@@ -280,6 +301,8 @@ class Database:
     def get_author_statistics_detailed(self, name, pub_type):
         """
         Get detailed statistics for one particular author.
+
+        @author 1: Sylvain, Ruvin
 
         @type  name: String
         @param name: Name of the author. Example: "Author A"
@@ -471,7 +494,52 @@ class Database:
                         data.append(self.authors[i].name)
         return data
 
+    def _build_authors_graph(self):
+        """
+        Build authors graph with each author name as nodes and the collaboration between them as edges.
+
+        @author 1: CipherHat
+
+        @rtype:   networkx.Graph()
+        @return:  the Graph containing nodes and edges
+        """
+        graph = Graph()
+        all_authors = [author.name for author in self.authors]
+        graph.add_nodes_from(all_authors)
+        for i in range(len(all_authors)):
+            for collab in self._get_collaborations(i, False):
+                graph.add_edge(all_authors[i], all_authors[collab])
+        return graph
+
+    def get_degree_of_separation(self, author1, author2):
+        """
+        Get degree of separation between two specified authors. This method is using authors_graph that is generated
+        during initialisation by executing _build_author_graphs method
+
+        @author 1: CipherHat
+
+        @type  author1: String
+        @param author1: Name of the author. Example: "Author A"
+        @type  author2: String
+        @param author2: Name of the second author. Example: "Author B"
+
+        @rtype:   String, int
+        @return:  If there is any degree of separation between two authors, a number will be returned e.g: 1
+                    If there is no degree of separation at all, String "X" will be returned.
+                    If the two authors name are the same, String "No separation between the same authors" will be returned
+                    If the author's name input is non existent, String "Not found" will be returned
+        """
+        if author1 == author2:
+            return "No separation between the same authors"
+        try:
+            return shortest_path_length(self.authors_graph, author1, author2) - 1
+        except NetworkXNoPath:
+            return "X"
+        except NetworkXError as e:
+            return "Not found"
+
     def split_author_name(self, name):
+
         split_name = str(name).split(" ")
         split_len = len(split_name)
 
@@ -483,6 +551,18 @@ class Database:
         return data
 
     def sort_author_by_name(self, name):
+        """
+        Get the sorted list of all authors with the specified keyword.
+
+        @author 1: Ruvin, Sylvain
+        @author 2: Dommy, CipherHat
+
+        @type  name: String
+        @param name: Name of the author or a keyword to be searched. Example: "Sam"
+
+        @rtype:   dict
+        @return:  A list containing the list of names of the author matching with the specified keyword
+        """
         if len(str(name)) < 2:
             return []
 
