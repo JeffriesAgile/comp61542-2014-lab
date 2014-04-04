@@ -142,7 +142,7 @@ def showPublicationSummary(status):
         # !DOMMY! I modified db.get_publications_by_author to match your "cheating" hidden last name in author
         # statistics method db.get_author_statistics_with_sole
         args["data"] = db.get_publications_by_author()
-        template='author_statistics.html'
+        template = 'author_statistics.html'
 
     if (status == "publication_year"):
         args["title"] = "Publication by Year"
@@ -164,7 +164,7 @@ def showPublicationSummary(status):
         args["data"] = db.get_author_statistics_with_sole(pub_type)
         args["pub_type"] = pub_type
         args["pub_str"] = PUB_TYPES[pub_type]
-        template='author_statistics.html'
+        template = 'author_statistics.html'
 
     args["status"] = status
 
@@ -184,6 +184,9 @@ def authorProfile(name):
 
 @app.route("/author_statistics", methods=['GET', 'POST'])
 def showAuthorStatistics():
+    """
+    :TODO refactor: this method has been replaced, may require refactoring in future
+    """
     dataset = app.config['DATASET']
     db = app.config['DATABASE']
     PUB_TYPES = ["Conference Papers", "Journals", "Books", "Book Chapters", "All Publications"]
@@ -213,7 +216,7 @@ def searchAuthor():
 
     # if db.sort_author_by_name returns only 1 result, redirect to the author's page directly
     if len(args["data"]) == 1:
-        return redirect("/author_profile/"+ str(args["data"][0][0]))
+        return redirect("/author_profile/" + str(args["data"][0][0]))
 
     return render_template('search.html', args=args)
 
@@ -260,7 +263,7 @@ def errorHandler(error):
         data = "Sorry, the page you are looking for has been removed. You are out of luck. However, if you feel this is a fault on our side (or you just love to argue), report us at"
     elif title == str(exceptions.InternalServerError.code):
         data = "Oops, this time it is our fault. Something went wrong, and we will fix it. If this causes you fatal problem, report us at"
-    request.path = "/" #so if HTTP method POST are invoked (e.g login submit action) on error page, it will be redirected to index page instead
+    request.path = "/"  # so if HTTP method POST are invoked (e.g login submit action) on error page, it will be redirected to index page instead
     args = {"title": title, "data": data, "email": email}
     return render_template('error.html', args=args)
 
@@ -321,6 +324,9 @@ def logout():
 
 @app.route('/register', methods=['GET', 'POST'])
 def register():
+    """
+    :TODO refactor: not been used yet. may require removing in future?
+    """
     if request.method == 'GET':
         return render_template('register.html')
         # user = User(request.form['username'] , request.form['password'],request.form['email'])
