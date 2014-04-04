@@ -176,9 +176,10 @@ def authorProfile(name):
     db = app.config['DATABASE']
     handled_name = replace(name, "%20", " ")
     args = {}
-    args["title"] = handled_name
+    args["title"] = "Author Profile"
+    args["name"] = handled_name
     args["data"] = db.get_author_statistics_detailed_all(handled_name)
-    return render_template('statistics_details.html', args=args)
+    return render_template('author_profile.html', args=args)
 
 
 @app.route("/author_statistics", methods=['GET', 'POST'])

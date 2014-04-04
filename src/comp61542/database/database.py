@@ -504,11 +504,14 @@ class Database:
         @return:  the Graph containing nodes and edges
         """
         graph = Graph()
-        all_authors = [author.name for author in self.authors]
-        graph.add_nodes_from(all_authors)
+        all_authors = {}
+        for name, id in self.author_idx.items():
+            all_authors[id] = name
+        graph.add_nodes_from(range(len(all_authors)))
         for i in range(len(all_authors)):
+            graph.node[i]['name'] = all_authors[i]
             for collab in self._get_collaborations(i, False):
-                graph.add_edge(all_authors[i], all_authors[collab])
+                graph.add_edge(i, collab)
         return graph
 
     def get_degree_of_separation(self, author1, author2):
@@ -532,7 +535,7 @@ class Database:
         if author1 == author2:
             return "No separation between the same authors"
         try:
-            return shortest_path_length(self.authors_graph, author1, author2) - 1
+            return shortest_path_length(self.authors_graph, self.author_idx[author1], self.author_idx[author2]) - 1
         except NetworkXNoPath:
             return "X"
         except NetworkXError as e:
