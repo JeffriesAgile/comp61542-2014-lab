@@ -4,6 +4,7 @@
 
 <h1>{{ args.title }}</h1>
 
+{% if args.title == "Author Statistics" %}
 <form name="input" action="/author_statistics" method="get" data-ajax="false">
     Publication type:
 
@@ -21,6 +22,7 @@
 
     <input type="submit" value="Submit">
 </form>
+{% endif %}
 
 <link rel="stylesheet" type="text/css" href="{{ url_for('static', filename='css/dataTables.bootstrap.css') }}">
 <script type="text/javascript"

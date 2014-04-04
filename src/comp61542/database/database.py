@@ -548,9 +548,9 @@ class Database:
 
         data = []
         if split_len > 1:
-            data = [name, split_name[split_len-1], split_name[0]]
+            data = [name, split_name[split_len-1], split_name[0], split_name[0] + " " + split_name[split_len-1]]
         elif split_len == 1:
-            data = [name, split_name[0], ""]
+            data = [name, split_name[0], "", split_name[0]]
         return data
 
     def sort_author_by_name(self, name):
@@ -604,13 +604,13 @@ class Database:
                 mn_all.append(a)
 
         # Sort every list
-        ln_exact.sort(key=lambda tup: tup[0])
-        ln_start.sort(key=lambda tup: tup[0])
-        ln_contain.sort(key=lambda tup: tup[0])
-        fn_exact.sort(key=lambda tup: tup[0])
-        fn_start.sort(key=lambda tup: tup[0])
-        fn_contain.sort(key=lambda tup: tup[0])
-        mn_all.sort(key=lambda tup: tup[0])
+        ln_exact.sort(key=lambda tup: tup[3])
+        ln_start.sort(key=lambda tup: tup[3])
+        ln_contain.sort(key=lambda tup: tup[3])
+        fn_exact.sort(key=lambda tup: tup[3])
+        fn_start.sort(key=lambda tup: tup[3])
+        fn_contain.sort(key=lambda tup: tup[3])
+        mn_all.sort(key=lambda tup: tup[3])
 
         # Merge all sorted lists
         ln_exact.extend(ln_start)
