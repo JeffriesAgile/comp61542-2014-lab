@@ -373,7 +373,6 @@ class TestDatabase(unittest.TestCase):
     def test_network(self):
         db = database.Database()
         self.assertTrue(db.read(path.join(self.data_dir, "test-separation.xml")))
-        print db.authors_graph.nodes()
         network.D3JsonGraph(db.authors_graph)
 
 if __name__ == '__main__':

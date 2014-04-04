@@ -7,6 +7,7 @@ from networkx import Graph, NetworkXError, NetworkXNoPath, shortest_path_length
 PublicationType = [
     "Conference Paper", "Journal", "Book", "Book Chapter"]
 
+
 class Publication:
     CONFERENCE_PAPER = 0
     JOURNAL = 1
@@ -22,9 +23,11 @@ class Publication:
             self.year = -1
         self.authors = authors
 
+
 class Author:
     def __init__(self, name):
         self.name = name
+
 
 class Stat:
     STR = ["Mean", "Median", "Mode"]
@@ -32,6 +35,7 @@ class Stat:
     MEAN = 0
     MEDIAN = 1
     MODE = 2
+
 
 class Database:
     def read(self, filename):
@@ -69,8 +73,8 @@ class Database:
         coauthors = {}
         for p in self.publications:
             if ((start_year == None or p.year >= start_year) and
-                (end_year == None or p.year <= end_year) and
-                (pub_type == 4 or pub_type == p.pub_type)):
+                    (end_year == None or p.year <= end_year) and
+                    (pub_type == 4 or pub_type == p.pub_type)):
                 for a in p.authors:
                     for a2 in p.authors:
                         if a != a2:
@@ -78,15 +82,16 @@ class Database:
                                 coauthors[a].add(a2)
                             except KeyError:
                                 coauthors[a] = set([a2])
+
         def display(db, coauthors, author_id):
             return "%s (%d)" % (db.authors[author_id].name, len(coauthors[author_id]))
 
         header = ("Author", "Co-Authors")
         data = []
         for a in coauthors:
-            data.append([ display(self, coauthors, a),
-                ", ".join([
-                    display(self, coauthors, ca) for ca in coauthors[a] ]) ])
+            data.append([display(self, coauthors, a),
+                         ", ".join([
+                             display(self, coauthors, ca) for ca in coauthors[a]])])
 
         return (header, data)
 
@@ -100,7 +105,7 @@ class Database:
 
         func = Stat.FUNC[av]
 
-        data = [ func(auth_per_pub[i]) for i in np.arange(4) ] + [ func(list(itertools.chain(*auth_per_pub))) ]
+        data = [func(auth_per_pub[i]) for i in np.arange(4)] + [func(list(itertools.chain(*auth_per_pub)))]
         return (header, data)
 
     def get_average_publications_per_author(self, av):
@@ -114,12 +119,12 @@ class Database:
 
         func = Stat.FUNC[av]
 
-        data = [ func(pub_per_auth[:, i]) for i in np.arange(4) ] + [ func(pub_per_auth.sum(axis=1)) ]
+        data = [func(pub_per_auth[:, i]) for i in np.arange(4)] + [func(pub_per_auth.sum(axis=1))]
         return (header, data)
 
     def get_average_publications_in_a_year(self, av):
         header = ("Conference Paper",
-            "Journal", "Book", "Book Chapter", "All Publications")
+                  "Journal", "Book", "Book Chapter", "All Publications")
 
         ystats = np.zeros((int(self.max_year) - int(self.min_year) + 1, 4))
 
@@ -128,30 +133,30 @@ class Database:
 
         func = Stat.FUNC[av]
 
-        data = [ func(ystats[:, i]) for i in np.arange(4) ] + [ func(ystats.sum(axis=1)) ]
+        data = [func(ystats[:, i]) for i in np.arange(4)] + [func(ystats.sum(axis=1))]
         return (header, data)
 
     def get_average_authors_in_a_year(self, av):
         header = ("Conference Paper",
-            "Journal", "Book", "Book Chapter", "All Publications")
+                  "Journal", "Book", "Book Chapter", "All Publications")
 
-        yauth = [ [set(), set(), set(), set(), set()] for _ in range(int(self.min_year), int(self.max_year) + 1) ]
+        yauth = [[set(), set(), set(), set(), set()] for _ in range(int(self.min_year), int(self.max_year) + 1)]
 
         for p in self.publications:
             for a in p.authors:
                 yauth[p.year - self.min_year][p.pub_type].add(a)
                 yauth[p.year - self.min_year][4].add(a)
 
-        ystats = np.array([ [ len(S) for S in y ] for y in yauth ])
+        ystats = np.array([[len(S) for S in y] for y in yauth])
 
         func = Stat.FUNC[av]
 
-        data = [ func(ystats[:, i]) for i in np.arange(5) ]
+        data = [func(ystats[:, i]) for i in np.arange(5)]
         return (header, data)
 
     def get_publication_summary_average(self, av):
         header = ("Details", "Conference Paper",
-            "Journal", "Book", "Book Chapter", "All Publications")
+                  "Journal", "Book", "Book Chapter", "All Publications")
 
         pub_per_auth = np.zeros((len(self.authors), 4))
         auth_per_pub = [[], [], [], []]
@@ -166,16 +171,16 @@ class Database:
 
         data = [
             [name + " authors per publication"]
-                + [ func(auth_per_pub[i]) for i in np.arange(4) ]
-                + [ func(list(itertools.chain(*auth_per_pub))) ],
+            + [func(auth_per_pub[i]) for i in np.arange(4)]
+            + [func(list(itertools.chain(*auth_per_pub)))],
             [name + " publications per author"]
-                + [ func(pub_per_auth[:, i]) for i in np.arange(4) ]
-                + [ func(pub_per_auth.sum(axis=1)) ] ]
+            + [func(pub_per_auth[:, i]) for i in np.arange(4)]
+            + [func(pub_per_auth.sum(axis=1))]]
         return (header, data)
 
     def get_publication_summary(self):
         header = ("Details", "Conference Paper",
-            "Journal", "Book", "Book Chapter", "Total")
+                  "Journal", "Book", "Book Chapter", "Total")
 
         plist = [0, 0, 0, 0]
         alist = [set(), set(), set(), set()]
@@ -189,85 +194,83 @@ class Database:
 
         data = [
             ["Number of publications"] + plist + [sum(plist)],
-            ["Number of authors"] + [ len(a) for a in alist ] + [len(ua)] ]
+            ["Number of authors"] + [len(a) for a in alist] + [len(ua)]]
         return (header, data)
 
     def get_average_authors_per_publication_by_author(self, av):
         header = ("Author", "Number of conference papers",
-            "Number of journals", "Number of books",
-            "Number of book chapers", "All publications")
+                  "Number of journals", "Number of books",
+                  "Number of book chapers", "All publications")
 
-        astats = [ [[], [], [], []] for _ in range(len(self.authors)) ]
+        astats = [[[], [], [], []] for _ in range(len(self.authors))]
         for p in self.publications:
             for a in p.authors:
                 astats[a][p.pub_type].append(len(p.authors))
 
         func = Stat.FUNC[av]
 
-        data = [ [self.authors[i].name]
-            + [ func(L) for L in astats[i] ]
-            + [ func(list(itertools.chain(*astats[i]))) ]
-            for i in range(len(astats)) ]
+        data = [[self.authors[i].name]
+                + [func(L) for L in astats[i]]
+                + [func(list(itertools.chain(*astats[i])))]
+                for i in range(len(astats))]
         return (header, data)
 
 
     def get_publications_by_author(self):
         header = ("Author", "Number of conference papers",
-            "Number of journals", "Number of books",
-            "Number of book chapers", "Total", "Last name")
-        #!DOMMY! this is where i replaced it. i added "Last name" column for your cheating hidden last name method
+                  "Number of journals", "Number of books",
+                  "Number of book chapers", "Total", "Last name")
 
-        astats = [ [0, 0, 0, 0] for _ in range(len(self.authors)) ]
+        astats = [[0, 0, 0, 0] for _ in range(len(self.authors))]
         for p in self.publications:
             for a in p.authors:
                 astats[a][p.pub_type] += 1
 
-        #!DOMMY! i copied your cheating hidden last name code in get_author_statistics_with_sole method
-        data = [ [self.authors[i].name] + astats[i] + [sum(astats[i])]+
-                 [self.authors[i].name.split(" ")[len(self.authors[i].name.split(" "))-1]]
-            for i in range(len(astats)) ]
+        data = [[self.authors[i].name] + astats[i] + [sum(astats[i])] +
+                [self.authors[i].name.split(" ")[len(self.authors[i].name.split(" ")) - 1]]
+                for i in range(len(astats))]
         return (header, data)
 
     def get_author_statistics(self):
         header = ("Author", "Number of \"hands-on\" researches",
-            "Number of projects managed", "Number of other publications", "Total")
+                  "Number of projects managed", "Number of other publications", "Total")
 
-        astats = [ [0, 0, 0] for _ in range(len(self.authors)) ]
+        astats = [[0, 0, 0] for _ in range(len(self.authors))]
         for p in self.publications:
             for a in p.authors:
-                if a == p.authors[0] or a == p.authors[len(p.authors)-1]:
+                if a == p.authors[0] or a == p.authors[len(p.authors) - 1]:
                     if a == p.authors[0]:
                         astats[a][0] += 1
-                    if a == p.authors[len(p.authors)-1]:
+                    if a == p.authors[len(p.authors) - 1]:
                         astats[a][1] += 1
                 else:
                     astats[a][2] += 1
 
-        data = [ [self.authors[i].name] + astats[i] + [sum(astats[i])]
-            for i in range(len(astats)) ]
+        data = [[self.authors[i].name] + astats[i] + [sum(astats[i])]
+                for i in range(len(astats))]
         return (header, data)
 
     def get_author_statistics_with_sole(self, pub_type):
         header = ("Author", "First author", "Last author", "Sole author", "Other", "Total", "Last name")
 
-        astats = [ [0, 0, 0, 0] for _ in range(len(self.authors)) ]
+        astats = [[0, 0, 0, 0] for _ in range(len(self.authors))]
         for p in self.publications:
             for a in p.authors:
                 if pub_type == 4 or pub_type == p.pub_type:
                     if len(p.authors) == 1:
                         astats[a][2] += 1
                     else:
-                        if a == p.authors[0] or a == p.authors[len(p.authors)-1]:
+                        if a == p.authors[0] or a == p.authors[len(p.authors) - 1]:
                             if a == p.authors[0]:
                                 astats[a][0] += 1
-                            if a == p.authors[len(p.authors)-1]:
+                            if a == p.authors[len(p.authors) - 1]:
                                 astats[a][1] += 1
                         else:
                             astats[a][3] += 1
 
-        data = [ [self.authors[i].name] + astats[i] + [sum(astats[i])] +
-                 [self.authors[i].name.split(" ")[len(self.authors[i].name.split(" "))-1]]
-            for i in range(len(astats)) ]
+        data = [[self.authors[i].name] + astats[i] + [sum(astats[i])] +
+                [self.authors[i].name.split(" ")[len(self.authors[i].name.split(" ")) - 1]]
+                for i in range(len(astats))]
         return (header, data)
 
     def get_author_statistics_detailed_all(self, name):
@@ -282,7 +285,7 @@ class Database:
         @param name: Name of the author. Example: "Author A"
 
         @rtype:   dict
-        @return:  Returns all type of publication data, in the format of [header,data[[x,y0,y1,y2,y3,y4],[x,y0,y1,y2,y3,y4],...]]
+        @return:  Returns all type of publication data, in the format of: [header,data[[x,y0,y1,y2,y3,y4],[x,y0,y1,y2,y3,y4],...]]
                     x = The string name of publication type e.g: Conference Papers
                     y0 = The number of publications the author appears first
                     y1 = The number of publications the author appears last
@@ -292,9 +295,7 @@ class Database:
         """
         header = ("", "First Author", "Last Author", "Sole Author", "Co-Authors", "All")
         title = ["Conference Papers", "Journal", "Book", "Book Chapter", "All Publication"]
-        data = []
-        for i in range(0, 5):
-            data += [[str(title[i])] + self.get_author_statistics_detailed(name, i)]
+        data = [[str(title[i])] + self.get_author_statistics_detailed(name, i) for i in range(0, 5)]
         return (header, data)
 
 
@@ -333,12 +334,12 @@ class Database:
                         if a == author_id:
                             data[4] += 1
                             if len(p.authors) == 1 and author_id == p.authors[0]:
-                                    data[2] += 1
+                                data[2] += 1
                             else:
-                                if author_id == p.authors[0] or author_id == p.authors[len(p.authors)-1]:
+                                if author_id == p.authors[0] or author_id == p.authors[len(p.authors) - 1]:
                                     if author_id == p.authors[0]:
                                         data[0] += 1
-                                    if author_id == p.authors[len(p.authors)-1]:
+                                    if author_id == p.authors[len(p.authors) - 1]:
                                         data[1] += 1
                         else:
                             if not (a in coauthors):
@@ -348,8 +349,8 @@ class Database:
 
     def get_average_authors_per_publication_by_year(self, av):
         header = ("Year", "Conference papers",
-            "Journals", "Books",
-            "Book chapers", "All publications")
+                  "Journals", "Books",
+                  "Book chapers", "All publications")
 
         ystats = {}
         for p in self.publications:
@@ -361,16 +362,16 @@ class Database:
 
         func = Stat.FUNC[av]
 
-        data = [ [y]
-            + [ func(L) for L in ystats[y] ]
-            + [ func(list(itertools.chain(*ystats[y]))) ]
-            for y in ystats ]
+        data = [[y]
+                + [func(L) for L in ystats[y]]
+                + [func(list(itertools.chain(*ystats[y])))]
+                for y in ystats]
         return (header, data)
 
     def get_publications_by_year(self):
         header = ("Year", "Number of conference papers",
-            "Number of journals", "Number of books",
-            "Number of book chapers", "Total")
+                  "Number of journals", "Number of books",
+                  "Number of book chapers", "Total")
 
         ystats = {}
         for p in self.publications:
@@ -380,13 +381,13 @@ class Database:
                 ystats[p.year] = [0, 0, 0, 0]
                 ystats[p.year][p.pub_type] += 1
 
-        data = [ [y] + ystats[y] + [sum(ystats[y])] for y in ystats ]
+        data = [[y] + ystats[y] + [sum(ystats[y])] for y in ystats]
         return (header, data)
 
     def get_average_publications_per_author_by_year(self, av):
         header = ("Year", "Conference papers",
-            "Journals", "Books",
-            "Book chapers", "All publications")
+                  "Journals", "Books",
+                  "Book chapers", "All publications")
 
         ystats = {}
         for p in self.publications:
@@ -400,16 +401,16 @@ class Database:
 
         func = Stat.FUNC[av]
 
-        data = [ [y]
-            + [ func(ystats[y][:, i]) for i in np.arange(4) ]
-            + [ func(ystats[y].sum(axis=1)) ]
-            for y in ystats ]
+        data = [[y]
+                + [func(ystats[y][:, i]) for i in np.arange(4)]
+                + [func(ystats[y].sum(axis=1))]
+                for y in ystats]
         return (header, data)
 
     def get_author_totals_by_year(self):
         header = ("Year", "Number of conference papers",
-            "Number of journals", "Number of books",
-            "Number of book chapers", "Total")
+                  "Number of journals", "Number of books",
+                  "Number of book chapers", "Total")
 
         ystats = {}
         for p in self.publications:
@@ -420,8 +421,8 @@ class Database:
                 s = ystats[p.year][p.pub_type]
             for a in p.authors:
                 s.add(a)
-        data = [ [y] + [len(s) for s in ystats[y]] + [len(ystats[y][0] | ystats[y][1] | ystats[y][2] | ystats[y][3])]
-            for y in ystats ]
+        data = [[y] + [len(s) for s in ystats[y]] + [len(ystats[y][0] | ystats[y][1] | ystats[y][2] | ystats[y][3])]
+                for y in ystats]
         return (header, data)
 
     def add_publication(self, pub_type, title, year, authors):
@@ -433,7 +434,8 @@ class Database:
             print "    Authors:", ",".join(authors)
             return
         if title == None:
-            print "Warning: adding publication with missing title [ %s %s (%s) ]" % (PublicationType[pub_type], year, ",".join(authors))
+            print "Warning: adding publication with missing title [ %s %s (%s) ]" % (
+            PublicationType[pub_type], year, ",".join(authors))
         idlist = []
         for a in authors:
             try:
@@ -469,13 +471,13 @@ class Database:
     def get_coauthor_details(self, name):
         author_id = self.author_idx[name]
         data = self._get_collaborations(author_id, True)
-        return [ (self.authors[key].name, data[key])
-            for key in data ]
+        return [(self.authors[key].name, data[key])
+                for key in data]
 
     def get_network_data(self):
         na = len(self.authors)
 
-        nodes = [ [self.authors[i].name, -1] for i in range(na) ]
+        nodes = [[self.authors[i].name, -1] for i in range(na)]
         links = set()
         for a in range(na):
             collab = self._get_collaborations(a, False)
@@ -503,15 +505,14 @@ class Database:
         @rtype:   networkx.Graph()
         @return:  the Graph containing nodes and edges
         """
+        all_authors = [(id, {"name": name}) for name, id in self.author_idx.items()]
+        all_links = [(i, collab) for i in range(len(all_authors)) for collab in self._get_collaborations(i, False) if
+                     i < collab]
+
+        # TODO refactor: revision on this part. whether to move the Graph code to its own class
         graph = Graph()
-        all_authors = {}
-        for name, id in self.author_idx.items():
-            all_authors[id] = name
-        graph.add_nodes_from(range(len(all_authors)))
-        for i in range(len(all_authors)):
-            graph.node[i]['name'] = all_authors[i]
-            for collab in self._get_collaborations(i, False):
-                graph.add_edge(i, collab)
+        graph.add_nodes_from(all_authors)
+        graph.add_edges_from(all_links)
         return graph
 
     def get_degree_of_separation(self, author1, author2):
@@ -548,7 +549,7 @@ class Database:
 
         data = []
         if split_len > 1:
-            data = [name, split_name[split_len-1], split_name[0], split_name[0] + " " + split_name[split_len-1]]
+            data = [name, split_name[split_len - 1], split_name[0], split_name[0] + " " + split_name[split_len - 1]]
         elif split_len == 1:
             data = [name, split_name[0], "", split_name[0]]
         return data
@@ -587,14 +588,14 @@ class Database:
             low_ln = str(a[1]).lower()
             low_fn = str(a[2]).lower()
             if lower_name in low_ln:
-                if low_ln==lower_name:
+                if low_ln == lower_name:
                     ln_exact.append(a)
                 elif low_ln.startswith(lower_name):
                     ln_start.append(a)
                 else:
                     ln_contain.append(a)
             elif lower_name in low_fn:
-                if low_fn==lower_name:
+                if low_fn == lower_name:
                     fn_exact.append(a)
                 elif low_fn.startswith(lower_name):
                     fn_start.append(a)
@@ -622,13 +623,14 @@ class Database:
 
         return ln_exact
 
+
 class DocumentHandler(handler.ContentHandler):
-    TITLE_TAGS = [ "sub", "sup", "i", "tt", "ref" ]
+    TITLE_TAGS = ["sub", "sup", "i", "tt", "ref"]
     PUB_TYPE = {
-        "inproceedings":Publication.CONFERENCE_PAPER,
-        "article":Publication.JOURNAL,
-        "book":Publication.BOOK,
-        "incollection":Publication.BOOK_CHAPTER }
+        "inproceedings": Publication.CONFERENCE_PAPER,
+        "article": Publication.JOURNAL,
+        "book": Publication.BOOK,
+        "incollection": Publication.BOOK_CHAPTER}
 
     def __init__(self, db):
         self.tag = None

@@ -139,34 +139,26 @@ def showPublicationSummary(status):
 
     if (status == "publication_author"):
         args["title"] = "Author Publication"
-        # !DOMMY! I modified db.get_publications_by_author to match your "cheating" hidden last name in author
-        # statistics method db.get_author_statistics_with_sole
         args["data"] = db.get_publications_by_author()
         template = 'author_statistics.html'
-
-    if (status == "publication_year"):
+    elif (status == "publication_year"):
         args["title"] = "Publication by Year"
         args["data"] = db.get_publications_by_year()
-
-    if (status == "author_year"):
+    elif (status == "author_year"):
         args["title"] = "Author by Year"
         args["data"] = db.get_author_totals_by_year()
-
-    # !DOMMY! This if block replaces showAuthorStatistics method @app.route("/author_statistics" so the template HTML
-    # used is determined by the template variable. default statistics_details.html. special cases for author_statistics
-    # and publication_author uses author_statistics.html
-    if (status == "author_statistics"):
+    elif (status == "author_statistics"):
         PUB_TYPES = ["Conference Papers", "Journals", "Books", "Book Chapters", "All Publications"]
+        pub_type = int(request.args.get("pub_type")) if "pub_type" in request.args else 4
         args["title"] = "Author Statistics"
-        pub_type = 4
-        if "pub_type" in request.args:
-            pub_type = int(request.args.get("pub_type"))
         args["data"] = db.get_author_statistics_with_sole(pub_type)
         args["pub_type"] = pub_type
         args["pub_str"] = PUB_TYPES[pub_type]
         template = 'author_statistics.html'
 
     args["status"] = status
+
+    print args
 
     return render_template(template, args=args)
 
@@ -175,24 +167,18 @@ def showPublicationSummary(status):
 def authorProfile(name):
     db = app.config['DATABASE']
     handled_name = replace(name, "%20", " ")
-    args = {}
-    args["title"] = "Author Profile"
-    args["name"] = handled_name
-    args["data"] = db.get_author_statistics_detailed_all(handled_name)
+    args = {"title": "Author Profile", "name": handled_name,
+            "data": db.get_author_statistics_detailed_all(handled_name)}
     return render_template('author_profile.html', args=args)
 
 
 @app.route("/author_statistics", methods=['GET', 'POST'])
 def showAuthorStatistics():
-    """
-    :TODO refactor: this method has been replaced, may require refactoring in future
-    """
+    # TODO refactor: this method has been replaced, may require refactoring in future
     dataset = app.config['DATASET']
     db = app.config['DATABASE']
     PUB_TYPES = ["Conference Papers", "Journals", "Books", "Book Chapters", "All Publications"]
-    args = {"dataset": dataset, "id": "author_statistics"}
-
-    args["title"] = "Author Statistics"
+    args = {"dataset": dataset, "id": "author_statistics", "title": "Author Statistics"}
 
     pub_type = 4
     if "pub_type" in request.args:
@@ -324,9 +310,7 @@ def logout():
 
 @app.route('/register', methods=['GET', 'POST'])
 def register():
-    """
-    :TODO refactor: not been used yet. may require removing in future?
-    """
+    # TODO refactor: not been used yet. may require removing in future?
     if request.method == 'GET':
         return render_template('register.html')
         # user = User(request.form['username'] , request.form['password'],request.form['email'])
