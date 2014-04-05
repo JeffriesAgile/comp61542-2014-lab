@@ -3,6 +3,7 @@ import itertools
 import numpy as np
 from xml.sax import handler, make_parser, SAXException
 from networkx import Graph, NetworkXError, NetworkXNoPath, shortest_path_length
+import networkx
 
 PublicationType = [
     "Conference Paper", "Journal", "Book", "Book Chapter"]
@@ -92,6 +93,8 @@ class Database:
             data.append([display(self, coauthors, a),
                          ", ".join([
                              display(self, coauthors, ca) for ca in coauthors[a]])])
+            # data.append([[self.authors[a].name, display(self, coauthors, a)],
+            #              [[self.authors[ca].name, ", ".join([display(self, coauthors, ca)])] for ca in coauthors[a]]])
 
         return (header, data)
 
