@@ -3,7 +3,6 @@ import itertools
 import numpy as np
 from xml.sax import handler, make_parser, SAXException
 from networkx import Graph, NetworkXError, NetworkXNoPath, shortest_path_length
-import networkx
 
 PublicationType = [
     "Conference Paper", "Journal", "Book", "Book Chapter"]
@@ -459,6 +458,17 @@ class Database:
             self.max_year = year
 
     def _get_collaborations(self, author_id, include_self):
+        """
+        Get the list of collaborations for particular author
+
+        @type author_id: int
+        @param author_id: the id of the author
+        @type include_self: bool
+        @param include_self: whether to include the collaboration with himself or not
+
+        @rtype: dict
+        @return: list of collaborations
+        """
         data = {}
         for p in self.publications:
             if author_id in p.authors:
@@ -478,6 +488,14 @@ class Database:
                 for key in data]
 
     def get_network_data(self):
+        """
+        Get all network data for all authors and their collaborations
+        @rtype:    list
+        @return:    list in the format of data[[name, amount_of_collaborations], set(all_collaborations)]
+                    name = data[0][n][0],
+                    amount_of_collaborations = data[0][n][1],
+                    set_of_all_collaborations = data[1]
+        """
         na = len(self.authors)
 
         nodes = [[self.authors[i].name, -1] for i in range(na)]
@@ -508,14 +526,12 @@ class Database:
         @rtype:   networkx.Graph()
         @return:  the Graph containing nodes and edges
         """
-        all_authors = [(id, {"name": name}) for name, id in self.author_idx.items()]
-        all_links = [(i, collab) for i in range(len(all_authors)) for collab in self._get_collaborations(i, False) if
-                     i < collab]
-
+        all_data = self.get_network_data()
         # TODO refactor: revision on this part. whether to move the Graph code to its own class
         graph = Graph()
-        graph.add_nodes_from(all_authors)
-        graph.add_edges_from(all_links)
+        # the nodes format will be {"id":int, "name":str}
+        graph.add_nodes_from([(i, {"name": all_data[0][i][0]}) for i in range(len(all_data[0]))])
+        graph.add_edges_from(all_data[1])
         return graph
 
     def get_degree_of_separation(self, author1, author2):
