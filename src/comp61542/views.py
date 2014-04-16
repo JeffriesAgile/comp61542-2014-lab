@@ -1,4 +1,5 @@
 from string import replace
+from numpy.numarray.util import handleError
 from comp61542 import app, mail, login_manager
 from database import database, models
 from visualization import network
@@ -179,6 +180,7 @@ def authorProfile(name):
     handled_name = replace(name, "%20", " ")
     args = {"title": "Author Profile", "name": handled_name,
             "data": db.get_author_statistics_detailed_all(handled_name),
+            "coauthor": db.get_coauthor_by_author_name(handled_name),
             "timeline": db.get_publication_timeline_by_author_name(handled_name)}
     return render_template('author_profile.html', args=args)
 
