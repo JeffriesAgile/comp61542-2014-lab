@@ -105,7 +105,7 @@ $(function() {
         }
       }
     ]
-  }).init().start();
+  }).init();
 
   $(document).on("click", "[data-demo]", function(e) {
     e.preventDefault();
