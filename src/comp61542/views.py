@@ -169,8 +169,6 @@ def showStatisticsDetails(status):
 
     args["status"] = status
 
-    print args
-
     return render_template(template, args=args)
 
 
