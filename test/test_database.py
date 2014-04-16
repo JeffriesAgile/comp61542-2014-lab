@@ -322,6 +322,29 @@ class TestDatabase(unittest.TestCase):
         self.assertEqual(db.get_degree_of_separation("Author E", "Author C"), 2, "Incorrect DoS between E and C")
         self.assertEqual(db.get_degree_of_separation("Author A", "Author F"), "X", "Incorrect DoS between A and F")
 
+    def test_get_publication_timeline_by_author_name(self):
+        db = database.Database()
+        self.assertTrue(db.read(path.join(self.data_dir, "test_timeline.xml")))
+        data = db.get_publication_timeline_by_author_name("author1")
+        # print data
+        self.assertEqual(data[0][0], 2014, "Incorrect year")
+        self.assertEqual(data[0][1][0][0], "journal2", "Incorrect title")
+        self.assertEqual(data[0][1][0][1], "author1", "Incorrect author")
+        self.assertEqual(data[0][1][0][2], "author2", "Incorrect author")
+
+        self.assertEqual(data[1][0], 2009, "Incorrect year")
+        self.assertEqual(data[1][1][0][0], "journal3", "Incorrect title")
+        self.assertEqual(data[1][1][0][1], "author1", "Incorrect author")
+        self.assertEqual(data[1][1][0][2], "author3", "Incorrect author")
+        self.assertEqual(data[1][1][1][0], "journal4", "Incorrect title")
+        self.assertEqual(data[1][1][1][1], "author1", "Incorrect author")
+        self.assertEqual(data[1][1][1][2], "author2", "Incorrect author")
+        self.assertEqual(data[1][1][1][3], "author3", "Incorrect author")
+
+        self.assertEqual(data[2][0], 2005, "Incorrect year")
+        self.assertEqual(data[2][1][0][0], "journal1", "Incorrect title")
+        self.assertEqual(data[2][1][0][1], "author1", "Incorrect author")
+
     def test_get_average_publications_per_author_by_year(self):
         db = database.Database()
         self.assertTrue(db.read(path.join(self.data_dir, "simple.xml")))

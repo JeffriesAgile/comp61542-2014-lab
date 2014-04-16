@@ -168,7 +168,8 @@ def authorProfile(name):
     db = app.config['DATABASE']
     handled_name = replace(name, "%20", " ")
     args = {"title": "Author Profile", "name": handled_name,
-            "data": db.get_author_statistics_detailed_all(handled_name)}
+            "data": db.get_author_statistics_detailed_all(handled_name),
+            "timeline": db.get_publication_timeline_by_author_name(handled_name)}
     return render_template('author_profile.html', args=args)
 
 

@@ -233,6 +233,39 @@ class Database:
                 for i in range(len(astats))]
         return (header, data)
 
+    def get_publication_timeline_by_author_name(self, name):
+        """
+        gets all detailed publication data (year, title, authors) for 1 particular author.
+        the data will be displayed in the form of timeline on author profile page in a cronological order.
+
+        @author 1: dumbastic
+
+        @type  name: String
+        @param name: Name of the author. Example: "Author A"
+
+        @rtype:   dict
+        @return:  Returns all publication data, in the format of:
+                    [(year0,[[title0,author0,author1]]),(year1,[[title1,author1,author2],...,[]]),...,()]
+        """
+        ystats = {}
+        publist = {}
+
+        for p in self.publications:
+            for a in p.authors:
+                if a == self.author_idx[name]:
+                    pub = [p.title]
+                    pub.extend([self.authors[i].name for i in p.authors])
+
+                    if p.year in ystats:
+                        publist = ystats[p.year]
+                    else:
+                        publist = list()
+
+                    publist.append(pub)
+                    ystats[p.year] = publist
+
+        return sorted(ystats.items(), key=lambda t: t[0], reverse=True)
+
     def get_author_statistics(self):
         header = ("Author", "Number of \"hands-on\" researches",
                   "Number of projects managed", "Number of other publications", "Total")
