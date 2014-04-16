@@ -1,4 +1,5 @@
 from string import replace
+from numpy.numarray.util import handleError
 from comp61542 import app, mail, login_manager
 from database import database, models
 from visualization import network
@@ -25,6 +26,16 @@ def format_data(data):
 @login_manager.user_loader
 def load_user(id):
     return models.User.query.get(int(id))
+
+
+@app.route("/statistics", methods=['GET', 'POST'])
+def showPublicationSummary():
+    dataset = app.config['DATASET']
+    db = app.config['DATABASE']
+    args = {"dataset": dataset}
+    args["title"] = "Publication Summary"
+    args["data"] = db.get_publication_summary()
+    return render_template('statistics.html', args=args)
 
 
 @app.route("/averages", methods=['GET', 'POST'])
@@ -111,13 +122,13 @@ def showStatisticsMenu():
     dataset = app.config['DATASET']
     db = app.config['DATABASE']
     args = {"dataset": dataset}
-    args["title"] = "Publication Summary"
-    args["data"] = db.get_publication_summary()
-    return render_template('statistics.html', args=args)
+    args["title"] = "Home"
+    # args["data"] = db.get_publication_summary()
+    return render_template('home.html', args=args)
 
 
 @app.route("/statisticsdetails/<status>", methods=['GET', 'POST'])
-def showPublicationSummary(status):
+def showStatisticsDetails(status):
     dataset = app.config['DATASET']
     db = app.config['DATABASE']
     args = {"dataset": dataset, "id": status}
@@ -139,34 +150,26 @@ def showPublicationSummary(status):
 
     if (status == "publication_author"):
         args["title"] = "Author Publication"
-        # !DOMMY! I modified db.get_publications_by_author to match your "cheating" hidden last name in author
-        # statistics method db.get_author_statistics_with_sole
         args["data"] = db.get_publications_by_author()
-        template='author_statistics.html'
-
-    if (status == "publication_year"):
+        template = 'author_statistics.html'
+    elif (status == "publication_year"):
         args["title"] = "Publication by Year"
         args["data"] = db.get_publications_by_year()
-
-    if (status == "author_year"):
+    elif (status == "author_year"):
         args["title"] = "Author by Year"
         args["data"] = db.get_author_totals_by_year()
-
-    # !DOMMY! This if block replaces showAuthorStatistics method @app.route("/author_statistics" so the template HTML
-    # used is determined by the template variable. default statistics_details.html. special cases for author_statistics
-    # and publication_author uses author_statistics.html
-    if (status == "author_statistics"):
+    elif (status == "author_statistics"):
         PUB_TYPES = ["Conference Papers", "Journals", "Books", "Book Chapters", "All Publications"]
+        pub_type = int(request.args.get("pub_type")) if "pub_type" in request.args else 4
         args["title"] = "Author Statistics"
-        pub_type = 4
-        if "pub_type" in request.args:
-            pub_type = int(request.args.get("pub_type"))
         args["data"] = db.get_author_statistics_with_sole(pub_type)
         args["pub_type"] = pub_type
         args["pub_str"] = PUB_TYPES[pub_type]
-        template='author_statistics.html'
+        template = 'author_statistics.html'
 
     args["status"] = status
+
+    print args
 
     return render_template(template, args=args)
 
@@ -175,30 +178,11 @@ def showPublicationSummary(status):
 def authorProfile(name):
     db = app.config['DATABASE']
     handled_name = replace(name, "%20", " ")
-    args = {}
-    args["title"] = handled_name
-    args["data"] = db.get_author_statistics_detailed_all(handled_name)
-    return render_template('statistics_details.html', args=args)
-
-
-@app.route("/author_statistics", methods=['GET', 'POST'])
-def showAuthorStatistics():
-    dataset = app.config['DATASET']
-    db = app.config['DATABASE']
-    PUB_TYPES = ["Conference Papers", "Journals", "Books", "Book Chapters", "All Publications"]
-    args = {"dataset": dataset, "id": "author_statistics"}
-
-    args["title"] = "Author Statistics"
-
-    pub_type = 4
-    if "pub_type" in request.args:
-        pub_type = int(request.args.get("pub_type"))
-
-    args["data"] = db.get_author_statistics_with_sole(pub_type)
-    args["pub_type"] = pub_type
-    args["pub_str"] = PUB_TYPES[pub_type]
-
-    return render_template('author_statistics.html', args=args)
+    args = {"title": "Author Profile", "name": handled_name,
+            "data": db.get_author_statistics_detailed_all(handled_name),
+            "coauthor": db.get_coauthor_by_author_name(handled_name),
+            "timeline": db.get_publication_timeline_by_author_name(handled_name)}
+    return render_template('author_profile.html', args=args)
 
 
 @app.route("/search", methods=['GET', 'POST'])
@@ -212,7 +196,7 @@ def searchAuthor():
 
     # if db.sort_author_by_name returns only 1 result, redirect to the author's page directly
     if len(args["data"]) == 1:
-        return redirect("/author_profile/"+ str(args["data"][0][0]))
+        return redirect("/author_profile/" + str(args["data"][0][0]))
 
     return render_template('search.html', args=args)
 
@@ -233,7 +217,6 @@ def showPublicationNetwork():
 
 
 @app.route("/about", methods=['GET', 'POST'])
-@login_required
 def about():
     args = {}
     contact_form_handler(args)
@@ -259,7 +242,7 @@ def errorHandler(error):
         data = "Sorry, the page you are looking for has been removed. You are out of luck. However, if you feel this is a fault on our side (or you just love to argue), report us at"
     elif title == str(exceptions.InternalServerError.code):
         data = "Oops, this time it is our fault. Something went wrong, and we will fix it. If this causes you fatal problem, report us at"
-    request.path = "/" #so if HTTP method POST are invoked (e.g login submit action) on error page, it will be redirected to index page instead
+    request.path = "/"  # so if HTTP method POST are invoked (e.g login submit action) on error page, it will be redirected to index page instead
     args = {"title": title, "data": data, "email": email}
     return render_template('error.html', args=args)
 
@@ -316,17 +299,6 @@ def login_form_handler(loginform):
 def logout():
     logout_user()
     return redirect('/')
-
-
-@app.route('/register', methods=['GET', 'POST'])
-def register():
-    if request.method == 'GET':
-        return render_template('register.html')
-        # user = User(request.form['username'] , request.form['password'],request.form['email'])
-        # db.session.add(user)
-        # db.session.commit()
-        # flash('User successfully registered')
-        # return redirect(url_for('login'))
 
 
 @app.before_request

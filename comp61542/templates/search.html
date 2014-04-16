@@ -4,7 +4,7 @@
 
 <h1>{{ args.title }}</h1>
 
-<form name="input" action="/search" method="get" data-ajax="false">
+<form id="searchbox" name="input" action="/search" method="get" data-ajax="false">
     Author name:
     <input type="text" name="name" value="{{ request.args.get('name','') }}">
     <input type="submit" value="Submit">

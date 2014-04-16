@@ -3,6 +3,10 @@ __author__ = 'dumbastic'
 import networkx as nx
 import matplotlib.pyplot as plt
 
+
+import json
+from networkx.readwrite import json_graph
+
 class PublicationNetwork():
     def generateNetwork(self):
         G=nx.random_geometric_graph(200,0.125)
@@ -33,3 +37,20 @@ class PublicationNetwork():
         plt.ylim(-0.05,1.05)
         plt.axis('off')
         plt.savefig('comp61542/static/publication_network.png')
+
+# import http_server
+
+class D3JsonGraph():
+    def __init__(self, G):
+        self.G = G
+        # this d3 example uses the name attribute for the mouse-hover value,
+        # so add a name to each node
+        # write json formatted data
+        d = json_graph.node_link_data(self.G) # node-link format to serialize
+        # write json
+        json.dump(d, open('../src/comp61542/static/js/authors.json','w'))
+        print('Wrote node-link JSON data to js/authors.json')
+        # open URL in running web browser
+        # http_server.load_url('force/force.html')
+        print('Or copy all files in force/ to webserver and load force/force.html')
+

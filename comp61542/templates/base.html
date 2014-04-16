@@ -6,11 +6,14 @@
 
     <!-- Bootstrap core CSS -->
     <link href="{{ url_for('static', filename='css/bootstrap.css') }}" rel="stylesheet">
+    <link href="{{ url_for('static', filename='css/bootstrap-tour.min.css') }}" rel="stylesheet">
 
     <!-- Custom styles for this template -->
     <link href="{{ url_for('static', filename='css/navbar.css') }}" rel="stylesheet">
     <script src="//ajax.googleapis.com/ajax/libs/jquery/1.8.2/jquery.min.js"></script>
     <script src="//netdna.bootstrapcdn.com/bootstrap/3.1.1/js/bootstrap.min.js"></script>
+    <script src="{{ url_for('static', filename='js/bootstrap-tour.min.js') }}"></script>
+    <script src="{{ url_for('static', filename='js/tour.js') }}"></script>
 
     <link href="{{ url_for('static', filename='css/jeffries.css') }}" rel="stylesheet">
 </head>
@@ -22,7 +25,7 @@
                      style="width:150px; margin-bottom:10px;"/></a>
     <button type="button" class="navbar-toggle" data-toggle="collapse" data-target="#viewsigninform">Sign
         in &raquo;</button>
-    <form class="navbar-form navbar-right navbar-collapse collapse" id="viewsigninform" role="form"
+    <form id="login" class="navbar-form navbar-right navbar-collapse collapse" id="viewsigninform" role="form"
           action="{{ request.path }}" method=post>
         {% if not g.user.is_authenticated()%}
         {{ def_dict.loginform.hidden_tag() }}
@@ -42,7 +45,7 @@
         <a href="/logout">Logout</a>
         {% endif %}
     </form>
-    <div class="navbar navbar-inverse" role="navigation">
+    <div id="navbar" class="navbar navbar-inverse" role="navigation">
         <div class="container-fluid">
             <div class="navbar-header">
                 <button type="button" class="navbar-toggle" data-toggle="collapse" data-target="#navbar-collapse">
@@ -55,6 +58,13 @@
             </div>
             <div id="navbar-collapse" class="navbar-collapse collapse">
                 <ul class="nav navbar-nav">
+                    <li class="dropdown">
+                        <a href="#" class="dropdown-toggle" data-toggle="dropdown">Summary<b class="caret"></b></a>
+                        <ul class="dropdown-menu">
+                            <li><a href="/statistics">Publication Summary</a></li>
+                            <li><a href="/averages">Averaged Year Data</a></li>
+                        </ul>
+                    </li>
                     <li class="dropdown">
                         <a href="#" class="dropdown-toggle" data-toggle="dropdown">Statistic Details <b
                                 class="caret"></b></a>
@@ -69,7 +79,6 @@
                         </ul>
                     </li>
                     <li><a href="/search">Search Author</a></li>
-                    <li><a href="/averages">Averaged Year Data</a></li>
                     <li><a href="/network">Publication Network</a></li>
                     {% if g.user.is_authenticated() and g.user.role == 1 %}
                     <li><a href="/admin">Admin</a></li>
@@ -87,7 +96,7 @@
     </div>
     <hr>
     <footer>
-        <p>&copy; <b><a href="/about">Jeffries Team</a></b> . COMP61542 - Agile and Test-Driven Development . 2014</p>
+        <p>&copy; <b><a id="about" href="/about">Jeffries Team</a></b> . COMP61542 - Agile and Test-Driven Development . 2014</p>
     </footer>
 </div>
 </body>
