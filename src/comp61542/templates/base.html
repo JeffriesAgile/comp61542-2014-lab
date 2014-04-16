@@ -25,7 +25,7 @@
                      style="width:150px; margin-bottom:10px;"/></a>
     <button type="button" class="navbar-toggle" data-toggle="collapse" data-target="#viewsigninform">Sign
         in &raquo;</button>
-    <form id="login" class="navbar-form navbar-right navbar-collapse collapse" id="viewsigninform" role="form"
+    <form class="navbar-form navbar-right navbar-collapse collapse" id="viewsigninform" role="form"
           action="{{ request.path }}" method=post>
         {% if not g.user.is_authenticated()%}
         {{ def_dict.loginform.hidden_tag() }}

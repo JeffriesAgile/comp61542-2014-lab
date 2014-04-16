@@ -27,7 +27,7 @@ $(function() {
         }
       }, {
         path: "/",
-        element: "#login",
+        element: "#viewsigninform",
         placement: "bottom",
         title: "Login Form",
         content: "This is login form. Enter your credential here to access the administrator page.",
