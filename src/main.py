@@ -24,4 +24,5 @@ if "TESTING" in os.environ:
     app.config['TESTING'] = True
 
 app.debug = True
-app.run(host='localhost', port=9292)
+port = int(os.environ.get('PORT', 9292))
+app.run(host='localhost', port=port)

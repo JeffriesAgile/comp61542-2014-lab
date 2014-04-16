@@ -1,0 +1,42 @@
+{% extends "base.html" %}
+{% block title %}{{ args.title }}{% endblock %}
+
+{% block head %}
+{{ super() }}
+{% endblock %}
+
+{% block content %}
+<style type="text/css">
+    .video-wrapper {
+        width: 560px;
+        max-width: 100%;
+        margin: 0 auto;
+    }
+    .video-container {
+        position: relative;
+        padding-bottom: 56.25%;
+        padding-top: 30px;
+        height: 0;
+        overflow: hidden;
+    }
+    .video-container iframe,
+    .video-container object,
+    .video-container embed {
+        position: absolute;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 100%;
+    }
+</style>
+
+<div style="text-align: center;">
+    <h1>Welcome, mate!</h1>
+    <p>First time here? Check out the video tutorial below:</p>
+</div>
+<div class="video-wrapper">
+    <div class="video-container">
+        <iframe width="560" height="315" src="//www.youtube.com/embed/7SlILk2WMTI" frameborder="0" allowfullscreen></iframe>
+    </div>
+</div>
+{% endblock %}

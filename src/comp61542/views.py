@@ -27,6 +27,16 @@ def load_user(id):
     return models.User.query.get(int(id))
 
 
+@app.route("/statistics", methods=['GET', 'POST'])
+def showPublicationSummary():
+    dataset = app.config['DATASET']
+    db = app.config['DATABASE']
+    args = {"dataset": dataset}
+    args["title"] = "Publication Summary"
+    args["data"] = db.get_publication_summary()
+    return render_template('statistics.html', args=args)
+
+
 @app.route("/averages", methods=['GET', 'POST'])
 def showAverages():
     dataset = app.config['DATASET']
@@ -111,13 +121,13 @@ def showStatisticsMenu():
     dataset = app.config['DATASET']
     db = app.config['DATABASE']
     args = {"dataset": dataset}
-    args["title"] = "Publication Summary"
-    args["data"] = db.get_publication_summary()
-    return render_template('statistics.html', args=args)
+    args["title"] = "Home"
+    # args["data"] = db.get_publication_summary()
+    return render_template('home.html', args=args)
 
 
 @app.route("/statisticsdetails/<status>", methods=['GET', 'POST'])
-def showPublicationSummary(status):
+def showStatisticsDetails(status):
     dataset = app.config['DATASET']
     db = app.config['DATABASE']
     args = {"dataset": dataset, "id": status}
