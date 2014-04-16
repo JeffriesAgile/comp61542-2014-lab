@@ -51,8 +51,7 @@
                 <tr>
                     <td>
                     {% for data_item in args.coauthor[1] %}
-                    <a href="/author_profile/{{ data_item }}">{{ data_item }}
-                    </a>{% if data_item == args.coauthor[1]|last %}.{% else %}, {% endif %}
+                    <a href="/author_profile/{{ data_item }}">{{ data_item }}</a>{% if data_item == args.coauthor[1]|last %}.{% else %}, {% endif %}
                     {% endfor %}
                     </td>
                 </tr>
