@@ -61,7 +61,7 @@
 <br/>
 {% endif %}
 
-<div class="ctc-form">
+<div id="contactform" class="ctc-form">
     <form role="form" action="/about" method=post>
         {{ args.contactform.hidden_tag() }}
         <div class="form-group ctc-input-left">{{ args.contactform.name(class_='form-control', placeholder='Name') }}
