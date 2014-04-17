@@ -1,4 +1,5 @@
 from string import replace
+from numpy.numarray.util import handleError
 from comp61542 import app, mail, login_manager
 from database import database, models
 from visualization import network
@@ -25,6 +26,16 @@ def format_data(data):
 @login_manager.user_loader
 def load_user(id):
     return models.User.query.get(int(id))
+
+
+@app.route("/statistics", methods=['GET', 'POST'])
+def showPublicationSummary():
+    dataset = app.config['DATASET']
+    db = app.config['DATABASE']
+    args = {"dataset": dataset}
+    args["title"] = "Publication Summary"
+    args["data"] = db.get_publication_summary()
+    return render_template('statistics.html', args=args)
 
 
 @app.route("/averages", methods=['GET', 'POST'])
@@ -111,13 +122,13 @@ def showStatisticsMenu():
     dataset = app.config['DATASET']
     db = app.config['DATABASE']
     args = {"dataset": dataset}
-    args["title"] = "Publication Summary"
-    args["data"] = db.get_publication_summary()
-    return render_template('statistics.html', args=args)
+    args["title"] = "Home"
+    # args["data"] = db.get_publication_summary()
+    return render_template('home.html', args=args)
 
 
 @app.route("/statisticsdetails/<status>", methods=['GET', 'POST'])
-def showPublicationSummary(status):
+def showStatisticsDetails(status):
     dataset = app.config['DATASET']
     db = app.config['DATABASE']
     args = {"dataset": dataset, "id": status}
@@ -158,8 +169,6 @@ def showPublicationSummary(status):
 
     args["status"] = status
 
-    print args
-
     return render_template(template, args=args)
 
 
@@ -168,7 +177,9 @@ def authorProfile(name):
     db = app.config['DATABASE']
     handled_name = replace(name, "%20", " ")
     args = {"title": "Author Profile", "name": handled_name,
-            "data": db.get_author_statistics_detailed_all(handled_name)}
+            "data": db.get_author_statistics_detailed_all(handled_name),
+            "coauthor": db.get_coauthor_by_author_name(handled_name),
+            "timeline": db.get_publication_timeline_by_author_name(handled_name)}
     return render_template('author_profile.html', args=args)
 
 

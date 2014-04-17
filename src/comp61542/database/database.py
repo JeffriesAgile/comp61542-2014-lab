@@ -97,6 +97,17 @@ class Database:
 
         return (header, data)
 
+    def get_coauthor_by_author_name(self, name):
+        coauthors = set()
+        for p in self.publications:
+            for a in p.authors:
+                if a == self.author_idx[name]:
+                    for a2 in p.authors:
+                        if a != a2:
+                            coauthors.add(a2)
+
+        return (["Co-Authors"], [self.authors[ca].name for ca in coauthors])
+
     def get_average_authors_per_publication(self, av):
         header = ("Conference Paper", "Journal", "Book", "Book Chapter", "All Publications")
 
@@ -233,6 +244,39 @@ class Database:
                 for i in range(len(astats))]
         return (header, data)
 
+    def get_publication_timeline_by_author_name(self, name):
+        """
+        gets all detailed publication data (year, title, authors) for 1 particular author.
+        the data will be displayed in the form of timeline on author profile page in a cronological order.
+
+        @author 1: dumbastic
+
+        @type  name: String
+        @param name: Name of the author. Example: "Author A"
+
+        @rtype:   dict
+        @return:  Returns all publication data, in the format of:
+                    [(year0,[[title0,author0,author1]]),(year1,[[title1,author1,author2],...,[]]),...,()]
+        """
+        ystats = {}
+        publist = {}
+
+        for p in self.publications:
+            for a in p.authors:
+                if a == self.author_idx[name]:
+                    pub = [p.title]
+                    pub.extend([self.authors[i].name for i in p.authors])
+
+                    if p.year in ystats:
+                        publist = ystats[p.year]
+                    else:
+                        publist = list()
+
+                    publist.append(pub)
+                    ystats[p.year] = publist
+
+        return sorted(ystats.items(), key=lambda t: t[0], reverse=True)
+
     def get_author_statistics(self):
         header = ("Author", "Number of \"hands-on\" researches",
                   "Number of projects managed", "Number of other publications", "Total")
@@ -295,7 +339,7 @@ class Database:
                     y3 = The number of co-authors for the author
                     y4 = The number of overall publications for the author
         """
-        header = ("", "First Author", "Last Author", "Sole Author", "Co-Authors", "All")
+        header = ("", "First Author", "Last Author", "Sole Author", "Other", "All", "Co-Authors")
         title = ["Conference Papers", "Journal", "Book", "Book Chapter", "All Publication"]
         data = [[str(title[i])] + self.get_author_statistics_detailed(name, i) for i in range(0, 5)]
         return (header, data)
@@ -321,13 +365,14 @@ class Database:
                     0 = The number of publications the author appears first
                     1 = The number of publications the author appears last
                     2 = The number of publications the author has sole ownership
-                    3 = The number of co-authors for the author
+                    3 = The number of publications the author appear as co-author
                     4 = The number of overall publications for the author
+                    3 = The number of co-authors for the author
         """
         if (pub_type > 4):
             raise ValueError
         author_id = self.author_idx[name]
-        data = [0, 0, 0, 0, 0]
+        data = [0, 0, 0, 0, 0, 0]
         coauthors = []
         for p in self.publications:
             if (pub_type == 4 or p.pub_type == pub_type):
@@ -343,10 +388,12 @@ class Database:
                                         data[0] += 1
                                     if author_id == p.authors[len(p.authors) - 1]:
                                         data[1] += 1
+                                else:
+                                    data[3] += 1
                         else:
                             if not (a in coauthors):
                                 coauthors.append(a)
-        data[3] = len(coauthors)
+        data[5] = len(coauthors)
         return data
 
     def get_average_authors_per_publication_by_year(self, av):
