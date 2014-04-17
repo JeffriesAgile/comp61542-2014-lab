@@ -183,6 +183,25 @@ def authorProfile(name):
     return render_template('author_profile.html', args=args)
 
 
+@app.route("/author_statistics", methods=['GET', 'POST'])
+def showAuthorStatistics():
+    # TODO refactor: this method has been replaced, may require refactoring in future
+    dataset = app.config['DATASET']
+    db = app.config['DATABASE']
+    PUB_TYPES = ["Conference Papers", "Journals", "Books", "Book Chapters", "All Publications"]
+    args = {"dataset": dataset, "id": "author_statistics", "title": "Author Statistics"}
+
+    pub_type = 4
+    if "pub_type" in request.args:
+        pub_type = int(request.args.get("pub_type"))
+
+    args["data"] = db.get_author_statistics_with_sole(pub_type)
+    args["pub_type"] = pub_type
+    args["pub_str"] = PUB_TYPES[pub_type]
+
+    return render_template('author_statistics.html', args=args)
+
+
 @app.route("/search", methods=['GET', 'POST'])
 def searchAuthor():
     dataset = app.config['DATASET']
@@ -197,6 +216,20 @@ def searchAuthor():
         return redirect("/author_profile/" + str(args["data"][0][0]))
 
     return render_template('search.html', args=args)
+
+
+@app.route("/dos", methods=['GET', 'POST'])
+def showDegreeOfSeparation():
+    dataset = app.config['DATASET']
+    db = app.config['DATABASE']
+    args = {"dataset": dataset, "id": "DoS"}
+
+    args["title"] = "Degree of Separation"
+    args["authors"] = db.get_all_authors_name()
+    args["header"] = ("Author 1", "Author 2", "Degree of Separation")
+    args["data"] = db.get_degree_of_separation(request.args.get('author1', ''), request.args.get('author2', ''))
+
+    return render_template('dos.html', args=args)
 
 
 @app.route("/network", methods=['GET', 'POST'])
@@ -297,6 +330,18 @@ def login_form_handler(loginform):
 def logout():
     logout_user()
     return redirect('/')
+
+
+@app.route('/register', methods=['GET', 'POST'])
+def register():
+    # TODO refactor: not been used yet. may require removing in future?
+    if request.method == 'GET':
+        return render_template('register.html')
+        # user = User(request.form['username'] , request.form['password'],request.form['email'])
+        # db.session.add(user)
+        # db.session.commit()
+        # flash('User successfully registered')
+        # return redirect(url_for('login'))
 
 
 @app.before_request
