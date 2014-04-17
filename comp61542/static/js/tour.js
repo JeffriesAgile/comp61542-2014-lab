@@ -69,7 +69,7 @@ $(function() {
         element: "#publications",
         placement: "top",
         title: "Author Profile Page",
-        content: "Second tab shows list of publications in cronological order in the form of timeline.<br><br>" +
+        content: "Second tab shows list of publications in chronological order in the form of timeline.<br><br>" +
             "You can visit this page by clicking any hyperlink on author name or from search result.",
         onShow: function() {
             $('#myTab a:last').tab('show')
@@ -81,6 +81,15 @@ $(function() {
         title: "Search Page",
         content: "If you want to find any author, you can use this search form. Enter an author name and click search.<br><br>" +
             "You can visit this page by selecting <small><b>Search Author</b></small> menu from the Navigation Bar.",
+        onHidden: function() {
+            return window.location.assign("/");
+        }
+      }, {
+        path: "/dos",
+        title: "Degree of Separation",
+        content: "This page shows the degree of separation between 2 authors.<br><br>" +
+            "You can visit this page by selecting <small><b>Degree of Separation</b></small> menu from the Navigation Bar.",
+        orphan: true,
         onHidden: function() {
             return window.location.assign("/");
         }
