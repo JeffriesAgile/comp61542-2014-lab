@@ -69,6 +69,11 @@ class Database:
     def get_all_authors(self):
         return self.author_idx.keys()
 
+    def get_all_authors_name(self):
+        authors = [self.authors[a].name for a in range(0, len(self.authors))]
+        authors.sort()
+        return authors
+
     def get_coauthor_data(self, start_year, end_year, pub_type):
         coauthors = {}
         for p in self.publications:

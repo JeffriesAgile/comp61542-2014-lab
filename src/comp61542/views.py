@@ -218,6 +218,20 @@ def searchAuthor():
     return render_template('search.html', args=args)
 
 
+@app.route("/dos", methods=['GET', 'POST'])
+def showDegreeOfSeparation():
+    dataset = app.config['DATASET']
+    db = app.config['DATABASE']
+    args = {"dataset": dataset, "id": "DoS"}
+
+    args["title"] = "Degree of Separation"
+    args["authors"] = db.get_all_authors_name()
+    args["header"] = ("Author 1", "Author 2", "Degree of Separation")
+    args["data"] = db.get_degree_of_separation(request.args.get('author1', ''), request.args.get('author2', ''))
+
+    return render_template('dos.html', args=args)
+
+
 @app.route("/network", methods=['GET', 'POST'])
 def showPublicationNetwork():
     dataset = app.config['DATASET']
