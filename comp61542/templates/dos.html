@@ -1,0 +1,61 @@
+{% extends "base.html" %}
+{% block title %}{{ args.title }}{% endblock %}
+{% block content %}
+
+<h1>{{ args.title }}</h1>
+
+<link href="{{ url_for('static', filename='css/listbox.css') }}" rel="stylesheet">
+<script src="{{ url_for('static', filename='js/listbox.js') }}"></script>
+<script>
+    $(function() {
+        $('select').listbox({'searchbar': true, 'multiselect':  false})
+    })
+</script>
+
+<form id="dos" name="input" action="/dos" method="get" data-ajax="false">
+    <div class="table-responsive">
+    <table>
+        <tr>
+            <td style="padding-right:20px;">
+                <b>Author 1 :</b>
+                <select name="author1">
+                    {% for author in args["authors"] %}
+                    <option value="{{ author }}" {% if author == request.args.get('author1') %}selected{% endif %}>{{ author }}</option>
+                    {% endfor %}
+                </select>
+            </td>
+            <td style="padding-right:50px;">
+                <b>Author 2:</b>
+                <select name="author2">
+                    {% for author in args["authors"] %}
+                    <option value="{{ author }}" {% if author == request.args.get('author2') %}selected{% endif %}>{{ author }}</option>
+                    {% endfor %}
+                </select>
+            </td>
+        </tr>
+    </table>
+    </div>
+    <br/>
+    <input type="submit">
+    <br/><br/>
+    <div class="table-responsive">
+        <table class="table table-striped table-bordered">
+            <thead>
+                <tr>
+                    {% for column in args["header"] %}
+                    <th>{{ column }}</th>
+                    {% endfor %}
+                </tr>
+            </thead>
+            <tbody>
+                <tr>
+                    <td>{{ request.args.get('author1', '-') }}</td>
+                    <td>{{ request.args.get('author2', '-') }}</td>
+                    <td>{{ args["data"] }}</td>
+                </tr>
+            </tbody>
+        </table>
+    </div>
+</form>
+
+{% endblock %}
