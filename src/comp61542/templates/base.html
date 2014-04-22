@@ -80,7 +80,7 @@
                         </ul>
                     </li>
                     <li><img src="{{ url_for('static', filename='images/search.png') }}" style="float:left; height:45px;"/><a href="/search">Search Author</a></li>
-                    <li><a href="/dos">Degree of Separation</a></li>
+                    <li><img src="{{ url_for('static', filename='images/dos.png') }}" style="float:left; height:45px;"/><a href="/dos">Degree of Separation</a></li>
                     <li><img src="{{ url_for('static', filename='images/network.png') }}" style="float:left; height:45px;"/><a href="/network">Publication Network</a></li>
                     {% if g.user.is_authenticated() and g.user.role == 1 %}
                     <li><a href="/admin">Admin</a></li>
