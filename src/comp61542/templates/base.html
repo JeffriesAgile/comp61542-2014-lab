@@ -59,7 +59,7 @@
             <div id="navbar-collapse" class="navbar-collapse collapse">
                 <ul class="nav navbar-nav">
                     <li class="dropdown">
-                    	<img src="{{ url_for('static', filename='images/average.png') }}" style="height:45px;"/>
+                    	<img src="{{ url_for('static', filename='images/average.png') }}" style="float:left; height:45px;"/>
                         <a href="#" class="dropdown-toggle" data-toggle="dropdown">Summary<b class="caret"></b></a>
                         <ul class="dropdown-menu">
                             <li><a href="/statistics">Publication Summary</a></li>
@@ -79,9 +79,9 @@
                             <li><a href="/coauthors">Co-Authors</a></li>
                         </ul>
                     </li>
-                    <li><img src="{{ url_for('static', filename='images/search.png') }}" style="height:45px;"/><a href="/search">Search Author</a></li>
+                    <li><img src="{{ url_for('static', filename='images/search.png') }}" style="float:left; height:45px;"/><a href="/search">Search Author</a></li>
                     <li><a href="/dos">Degree of Separation</a></li>
-                    <li><img src="{{ url_for('static', filename='images/network.png') }}" style="height:45px;"/><a href="/network">Publication Network</a></li>
+                    <li><img src="{{ url_for('static', filename='images/network.png') }}" style="float:left; height:45px;"/><a href="/network">Publication Network</a></li>
                     {% if g.user.is_authenticated() and g.user.role == 1 %}
                     <li><a href="/admin">Admin</a></li>
                     {% endif %}
