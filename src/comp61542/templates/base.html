@@ -47,7 +47,7 @@
     </form>
     <div id="navbar" class="navbar navbar-inverse" role="navigation">
         <div class="container-fluid">
-            <div class="navbar-header">
+            <div class="navbar-header" style="margin-top: 8px">
                 <button type="button" class="navbar-toggle" data-toggle="collapse" data-target="#navbar-collapse">
                     <span class="sr-only">Toggle navigation</span>
                     <span class="icon-bar"></span>
@@ -59,16 +59,16 @@
             <div id="navbar-collapse" class="navbar-collapse collapse">
                 <ul class="nav navbar-nav">
                     <li class="dropdown">
-                    	<img src="{{ url_for('static', filename='images/average.png') }}" style="float:left; height:45px;"/>
-                        <a href="#" class="dropdown-toggle" data-toggle="dropdown">Summary<b class="caret"></b></a>
+                        <a href="#" class="dropdown-toggle" data-toggle="dropdown"><img src="{{ url_for('static', filename='images/average.png') }}" style="height:30px;"/>
+                        Summary<b class="caret"></b></a>
                         <ul class="dropdown-menu">
                             <li><a href="/statistics">Publication Summary</a></li>
                             <li><a href="/averages">Averaged Year Data</a></li>
                         </ul>
                     </li>
                     <li class="dropdown">
-                    	<img src="{{ url_for('static', filename='images/statdetails.png') }}" style="float:left; height:45px;"/>
-                        <a href="#" class="dropdown-toggle" data-toggle="dropdown">Statistic Details <b
+                        <a href="#" class="dropdown-toggle" data-toggle="dropdown"><img src="{{ url_for('static', filename='images/statdetails.png') }}" style="height:30px;"/>
+                        Statistic Details <b
                                 class="caret"></b></a>
                         <ul class="dropdown-menu">
                             <li><a href="/statisticsdetails/publication_author">Publication by Author</a></li>
@@ -80,9 +80,9 @@
                             <li><a href="/coauthors">Co-Authors</a></li>
                         </ul>
                     </li>
-                    <li><img src="{{ url_for('static', filename='images/search.png') }}" style="float:left; height:45px;"/><a href="/search">Search Author</a></li>
-                    <li><img src="{{ url_for('static', filename='images/dos.png') }}" style="float:left; height:45px;"/><a href="/dos">Degree of Separation</a></li>
-                    <li><img src="{{ url_for('static', filename='images/network.png') }}" style="float:left; height:45px;"/><a href="/network">Publication Network</a></li>
+                    <li><a href="/search"><img src="{{ url_for('static', filename='images/search.png') }}" style="height:30px;"/>Search Author</a></li>
+                    <li><a href="/dos"><img src="{{ url_for('static', filename='images/dos.png') }}" style="height:30px;"/>Degree of Separation</a></li>
+                    <li><a href="/network"><img src="{{ url_for('static', filename='images/network.png') }}" style="height:30px;"/>Publication Network</a></li>
                     {% if g.user.is_authenticated() and g.user.role == 1 %}
                     <li><a href="/admin">Admin</a></li>
                     {% endif %}
