@@ -2,7 +2,7 @@ from comp61542.statistics import average
 import itertools
 import numpy as np
 from xml.sax import handler, make_parser, SAXException
-from networkx import Graph, NetworkXError, NetworkXNoPath, shortest_path_length
+from networkx import Graph, NetworkXError, NetworkXNoPath, shortest_path_length, all_shortest_paths
 
 PublicationType = [
     "Conference Paper", "Journal", "Book", "Book Chapter"]
@@ -612,6 +612,17 @@ class Database:
             return "X"
         except NetworkXError as e:
             return "Not found"
+        
+    def get_degree_of_separation_visualisation(self, author1, author2):
+        
+        if author1 == author2:
+            return "No separation between the same authors"
+        try:
+            list_of_graphs = all_shortest_paths(self.authors_graph, self.author_idx[author1], self.author_idx[author2])
+        except NetworkXError as e:
+            return "Not found"
+        
+        return None
 
     def split_author_name(self, name):
 
