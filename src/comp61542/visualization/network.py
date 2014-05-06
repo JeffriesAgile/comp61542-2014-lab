@@ -54,12 +54,12 @@ class D3JsonGraph():
         # http_server.load_url('force/force.html')
         print('Or copy all files in force/ to webserver and load force/force.html')
 
-        pos=nx.spring_layout(G)
-        # nx.draw_networkx_labels(G,pos,font_size=20,font_family='sans-serif')
-        node_labels = nx.get_node_attributes(G,'name')
-        nx.draw(G,pos,node_color='#A0CBE2',node_size=0,font_size=16,labels=node_labels)
-        # nx.draw(G,pos,node_color='#A0CBE2',width=4,edge_cmap=plt.cm.Blues,with_labels=False)
-        plt.savefig('comp61542/static/images/' + filename + '.png')
-        # plt.show()
+        # pos=nx.spring_layout(G)
+        # # nx.draw_networkx_labels(G,pos,font_size=20,font_family='sans-serif')
+        # node_labels = nx.get_node_attributes(G,'name')
+        # nx.draw(G,pos,node_color='#A0CBE2',node_size=0,font_size=16,labels=node_labels)
+        # # nx.draw(G,pos,node_color='#A0CBE2',width=4,edge_cmap=plt.cm.Blues,with_labels=False)
+        # plt.savefig('comp61542/static/images/' + filename + '.png')
+        # # plt.show()
 
 

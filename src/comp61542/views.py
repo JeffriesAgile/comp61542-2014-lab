@@ -227,6 +227,9 @@ def showDegreeOfSeparation():
     db = app.config['DATABASE']
     args = {"dataset": dataset, "id": "DoS"}
 
+    graph = db.get_degree_of_separation_visualisation(request.args.get('author1', ''), request.args.get('author2', ''))
+    network.D3JsonGraph(graph, 'dos')
+
     args["title"] = "Degree of Separation"
     args["authors"] = db.get_all_authors_name()
     args["header"] = ("Author 1", "Author 2", "Degree of Separation")

@@ -650,7 +650,7 @@ class Database:
         # Add attributes to nodes
         for i in g.nodes():
             g.node[i]['name']=self.authors[i].name
-        
+        print g.nodes(data=True)
         return g
 
     def split_author_name(self, name):

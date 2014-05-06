@@ -12,16 +12,6 @@
     <li><a href="#publications" data-toggle="tab">Publications</a></li>
 </ul>
 
-<div id="chart"></div>
-<script src="//d3js.org/d3.v3.min.js"></script>
-<script src="{{ url_for('static', filename='js/authors-graph.js') }}"></script>
-<style type="text/css">
-    line.link {
-        fill: none;
-        stroke: #C1D6E1;
-        stroke-width: 1px;
-    }
-</style>
 
 <!-- Tab panes -->
 <div class="tab-content">
@@ -68,7 +58,16 @@
                 </tr>
                 <tr>
                     <td>
-
+                        <div id="chart"></div>
+                        <script src="//d3js.org/d3.v3.min.js"></script>
+                        <script src="{{ url_for('static', filename='js/authors-graph.js') }}"></script>
+                        <style type="text/css">
+                            line.link {
+                                fill: none;
+                                stroke: #C1D6E1;
+                                stroke-width: 1px;
+                            }
+                        </style>
                     </td>
                 </tr>
                 </tbody>
