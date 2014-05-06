@@ -4,6 +4,15 @@
 
 <link href="{{ url_for('static', filename='css/timeline.css') }}" rel="stylesheet">
 
+<h1>{{ args.title }} - {{ args.name }}</h1>
+
+<!-- Nav tabs -->
+<ul class="nav nav-tabs" id="myTab">
+    <li class="active"><a href="#statistics" data-toggle="tab">Statistics</a></li>
+    <li><a href="#publications" data-toggle="tab">Publications</a></li>
+</ul>
+
+<div id="chart"></div>
 <script src="//d3js.org/d3.v3.min.js"></script>
 <script src="{{ url_for('static', filename='js/authors-graph.js') }}"></script>
 <style type="text/css">
@@ -14,14 +23,6 @@
     }
 </style>
 
-<h1>{{ args.title }} - {{ args.name }}</h1>
-
-<!-- Nav tabs -->
-<ul class="nav nav-tabs" id="myTab">
-    <li class="active"><a href="#statistics" data-toggle="tab">Statistics</a></li>
-    <li><a href="#publications" data-toggle="tab">Publications</a></li>
-</ul>
-<div id="chart"></div>
 <!-- Tab panes -->
 <div class="tab-content">
     <div class="tab-pane active" id="statistics">
