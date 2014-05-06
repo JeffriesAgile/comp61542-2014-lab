@@ -325,7 +325,11 @@ class TestDatabase(unittest.TestCase):
     def test_get_degree_of_separation_visualisation(self):
         db = database.Database()
         self.assertTrue(db.read(path.join(self.data_dir, "test-visu-separation.xml")))
-        # self.assertEqual(db.get_degree_of_separation_visualisation("Author A", "Author E"), [[0, 5]], "Incorrect DoS between E and C")
+        graph = db.get_degree_of_separation_visualisation("Author A", "Author E")
+        g = graph.nodes(data=True)
+        for e in g:
+            print e
+        self.assertEqual(graph.nodes(), [0,4], "Incorrect shortest path between A and E")
 
     def test_get_coauthor_graph_by_author_name(self):
         db = database.Database()

@@ -636,12 +636,23 @@ class Database:
         
         if author1 == author2:
             return "No separation between the same authors"
+        
+        # Compute all the shortest paths from author1 to author2
         try:
-            list_of_graphs = all_shortest_paths(self.authors_graph, self.author_idx[author1], self.author_idx[author2])
+            list_of_paths = all_shortest_paths(self.authors_graph, self.author_idx[author1], self.author_idx[author2])
         except NetworkXError as e:
             return "Not found"
         
-        return None
+        g = Graph()
+        # Add the shortest paths to the graph
+        for path in list_of_paths:
+            g.add_path(path)
+        
+        # Add attributes to nodes
+        for i in g.nodes():
+            g.node[i]['name']=self.authors[i].name
+        
+        return g
 
     def split_author_name(self, name):
 
