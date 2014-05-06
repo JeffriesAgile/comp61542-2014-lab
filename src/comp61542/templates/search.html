@@ -15,7 +15,7 @@
     {% else %}
         {% for author in args.data %}
         <li>
-            <a href="/author_profile/{{ author[0] }}">{{ author[0] }}</a>
+            <a href="/author_profile?name={{ author[0] }}">{{ author[0] }}</a>
         </li>
         {% endfor %}
     {% endif %}

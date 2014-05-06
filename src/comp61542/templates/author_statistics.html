@@ -78,7 +78,7 @@
         <tbody>
         {% for row in args.data[1] %}
         <tr>
-            <td><a href="/author_profile/{{ row[0] }}">{{ row [0] }}</a></td>
+            <td><a href="/author_profile?name={{ row[0] }}">{{ row [0] }}</a></td>
             {% for x in range(1, row|length ) %}
             <td {% if x == row|length-1 %} style="display:none"{% endif %}>
                 {{ row[x] }}</td>

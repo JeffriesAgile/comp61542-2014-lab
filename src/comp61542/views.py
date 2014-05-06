@@ -172,10 +172,10 @@ def showStatisticsDetails(status):
     return render_template(template, args=args)
 
 
-@app.route("/author_profile/<name>", methods=['GET', 'POST'])
-def authorProfile(name):
+@app.route("/author_profile", methods=['GET', 'POST'])
+def authorProfile():
     db = app.config['DATABASE']
-    handled_name = replace(name, "%20", " ")
+    handled_name = replace(request.args.get("name"), "%20", " ")
     graph = db.get_coauthor_graph_by_author_name(handled_name)
     network.D3JsonGraph(graph, 'co-authors')
     args = {"title": "Author Profile", "name": handled_name,
@@ -216,7 +216,7 @@ def searchAuthor():
 
     # if db.sort_author_by_name returns only 1 result, redirect to the author's page directly
     if len(args["data"]) == 1:
-        return redirect("/author_profile/" + str(args["data"][0][0]))
+        return redirect("/author_profile?name=" + str(args["data"][0][0]))
 
     return render_template('search.html', args=args)
 
