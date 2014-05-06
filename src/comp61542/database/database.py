@@ -633,6 +633,9 @@ class Database:
         
     def get_degree_of_separation_visualisation(self, author1, author2):
         
+        if author1 == '' or author2 == '':
+            return Graph()
+        
         if author1 == author2:
             return "No separation between the same authors"
         
@@ -643,6 +646,7 @@ class Database:
             return "Not found"
         
         g = Graph()
+        g.is_multigraph(False)
         # Add the shortest paths to the graph
         for path in list_of_paths:
             g.add_path(path)
