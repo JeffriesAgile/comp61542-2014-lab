@@ -618,9 +618,16 @@ class Database:
         if author1 == author2:
             return "No separation between the same authors"
         try:
-            list_of_graphs = all_shortest_paths(self.authors_graph, self.author_idx[author1], self.author_idx[author2])
+            list_of_paths = all_shortest_paths(self.authors_graph, self.author_idx[author1], self.author_idx[author2])
         except NetworkXError as e:
             return "Not found"
+        
+        g = Graph()
+        for path in list_of_paths:
+            transformed_path = []
+            for p in path:
+                transformed_path.append((p, {"name":self.authors[p].name}))
+            g.add_path(transformed_path)
         
         return None
 
