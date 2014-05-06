@@ -113,6 +113,25 @@ class Database:
 
         return (["Co-Authors"], [self.authors[ca].name for ca in coauthors])
 
+    def get_coauthor_graph_by_author_name(self, name):
+        coauthors = set()
+        for p in self.publications:
+            for a in p.authors:
+                if a == self.author_idx[name]:
+                    for a2 in p.authors:
+                        if a != a2:
+                            coauthors.add(a2)
+
+        graph = Graph()
+        # the nodes format will be {"id":int, "name":str}
+        graph.add_node(self.author_idx[name], {"name":name})
+        print graph
+        # graph.add_nodes_from([(i, {"name": all_data[0][i][0]}) for i in range(len(all_data[0]))])
+        graph.add_nodes_from([ca, self.authors[ca].name] for ca in coauthors)
+        graph.add_edges_from([(self.author_idx[name], name), (ca, self.authors[ca].name)] for ca in coauthors)
+
+        return graph
+
     def get_average_authors_per_publication(self, av):
         header = ("Conference Paper", "Journal", "Book", "Book Chapter", "All Publications")
 

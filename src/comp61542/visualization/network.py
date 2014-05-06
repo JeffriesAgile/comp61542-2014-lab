@@ -41,16 +41,17 @@ class PublicationNetwork():
 # import http_server
 
 class D3JsonGraph():
-    def __init__(self, G):
+    def __init__(self, G, filename):
         self.G = G
         # this d3 example uses the name attribute for the mouse-hover value,
         # so add a name to each node
         # write json formatted data
         d = json_graph.node_link_data(self.G) # node-link format to serialize
         # write json
-        json.dump(d, open('../src/comp61542/static/js/authors.json','w'))
-        print('Wrote node-link JSON data to js/authors.json')
+        json.dump(d, open('../src/comp61542/static/js/' + filename + '.json','w'))
+        print('Wrote node-link JSON data to js/' + filename + '.json')
         # open URL in running web browser
         # http_server.load_url('force/force.html')
         print('Or copy all files in force/ to webserver and load force/force.html')
+
 

@@ -327,6 +327,12 @@ class TestDatabase(unittest.TestCase):
         self.assertTrue(db.read(path.join(self.data_dir, "test-visu-separation.xml")))
         # self.assertEqual(db.get_degree_of_separation_visualisation("Author A", "Author E"), [[0, 5]], "Incorrect DoS between E and C")
 
+    def test_get_coauthor_graph_by_author_name(self):
+        db = database.Database()
+        self.assertTrue(db.read(path.join(self.data_dir, "test-visu-separation.xml")))
+        db.get_coauthor_graph_by_author_name("Author A")
+        # self.assertEqual(data, 1, "Incorrect DoS between C and D")
+
     def test_get_publication_timeline_by_author_name(self):
         db = database.Database()
         self.assertTrue(db.read(path.join(self.data_dir, "test_timeline.xml")))
