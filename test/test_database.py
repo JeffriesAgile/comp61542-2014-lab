@@ -324,9 +324,10 @@ class TestDatabase(unittest.TestCase):
         
     def test_get_degree_of_separation_visualisation(self):
         db = database.Database()
-        for e in db.get_degree_of_separation_visualisation("Author A", "Author E").edges():
-            print e
         self.assertTrue(db.read(path.join(self.data_dir, "test-visu-separation.xml")))
+        for e in db.get_degree_of_separation_visualisation("Author A", "Author E").nodes(data=True):
+            print e
+        
         #self.assertTrue([db.author_idx["Author A"], db.author_idx["Author E"]] isIn db.get_degree_of_separation_visualisation("Author A", "Author E"), "Incorrect shortest path between A and E")
 
     def test_get_publication_timeline_by_author_name(self):

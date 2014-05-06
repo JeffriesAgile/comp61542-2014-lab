@@ -624,12 +624,12 @@ class Database:
         
         g = Graph()
         for path in list_of_paths:
-            transformed_path = []
-            for p in path:
-                transformed_path.append((p, {"name":self.authors[p].name}))
-            g.add_path(transformed_path)
+            g.add_path(path)
         
-        return None
+        for i in g.nodes():
+            g.node[i]['name']=self.authors[i].name
+        
+        return g
 
     def split_author_name(self, name):
 
