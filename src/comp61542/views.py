@@ -177,7 +177,7 @@ def authorProfile(name):
     db = app.config['DATABASE']
     handled_name = replace(name, "%20", " ")
     graph = db.get_coauthor_graph_by_author_name(handled_name)
-    # network.D3JsonGraph(graph, 'co-authors')
+    network.D3JsonGraph(graph, 'co-authors')
     args = {"title": "Author Profile", "name": handled_name,
             "data": db.get_author_statistics_detailed_all(handled_name),
             "coauthor": db.get_coauthor_by_author_name(handled_name),

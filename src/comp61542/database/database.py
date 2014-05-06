@@ -124,11 +124,10 @@ class Database:
 
         graph = Graph()
         # the nodes format will be {"id":int, "name":str}
-        graph.add_node(self.author_idx[name], {"name":name})
-        print graph
+        graph.add_node(self.author_idx[name], name = name)
         # graph.add_nodes_from([(i, {"name": all_data[0][i][0]}) for i in range(len(all_data[0]))])
-        graph.add_nodes_from([ca, self.authors[ca].name] for ca in coauthors)
-        graph.add_edges_from([(self.author_idx[name], name), (ca, self.authors[ca].name)] for ca in coauthors)
+        graph.add_nodes_from([(ca, {"name": self.authors[ca].name}) for ca in coauthors])
+        graph.add_edges_from([(self.author_idx[name], ca) for ca in coauthors])
 
         return graph
 

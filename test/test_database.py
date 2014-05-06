@@ -334,7 +334,7 @@ class TestDatabase(unittest.TestCase):
     def test_get_coauthor_graph_by_author_name(self):
         db = database.Database()
         self.assertTrue(db.read(path.join(self.data_dir, "test-visu-separation.xml")))
-        db.get_coauthor_graph_by_author_name("Author A")
+        db.get_coauthor_graph_by_author_name("Author B")
         # self.assertEqual(data, 1, "Incorrect DoS between C and D")
 
     def test_get_publication_timeline_by_author_name(self):
