@@ -637,20 +637,22 @@ class Database:
             return Graph()
         
         if author1 == author2:
-            return "No separation between the same authors"
+            return Graph()
         
         # Compute all the shortest paths from author1 to author2
         try:
             list_of_paths = all_shortest_paths(self.authors_graph, self.author_idx[author1], self.author_idx[author2])
         except NetworkXError as e:
             return "Not found"
-        
+
         g = Graph()
-        g.is_multigraph(False)
         # Add the shortest paths to the graph
-        for path in list_of_paths:
-            g.add_path(path)
-        
+        try:
+            for path in list_of_paths:
+                g.add_path(path)
+        except NetworkXNoPath as e:
+            return Graph()
+
         # Add attributes to nodes
         for i in g.nodes():
             g.node[i]['name']=self.authors[i].name
