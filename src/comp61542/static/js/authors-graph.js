@@ -4,6 +4,7 @@
 
 var w = 900,
     h = 500,
+    labels,
     fill = d3.scale.category20();
 
 var vis = d3.select("#chart")
@@ -38,6 +39,8 @@ d3.json("js/co-authors.json", function(json) {
         .attr("cy", function(d) { return d.y; })
         .attr("r", 5)
         .style("fill", function(d) { return fill(d.group); })
+        .on('mouseover', fade(true))
+        .on('mouseout', fade(false))
         .call(force.drag);
 
     node.append("svg:title")
@@ -57,4 +60,45 @@ d3.json("js/co-authors.json", function(json) {
         node.attr("cx", function(d) { return d.x; })
             .attr("cy", function(d) { return d.y; });
     });
+
+    function fade(bo) {
+        return function(d) {
+            var opacity = bo ? 0.2 : 1;
+            var rad = radius(d);
+
+            node.style('stroke-opacity', function(o) {
+                thisOpac = isConnected(d, o) ? 1 : opacity;
+                this.setAttribute('fill-opacity', thisOpac);
+                return thisOpac;
+            });
+
+            link.style('stroke-opacity', function(o) {
+                return o.source === d || o.target === d ? 1 : opacity;
+            });
+
+
+            labels.select('text.label').remove();
+            node.select('name').remove();
+
+            if (bo) {
+                labels.filter(function(o) {
+                        return isConnected(o, d);
+                    })
+                    .append('svg:text')
+                    .attr('y', function(o) {
+                            return (o == d) ? (rad + 10) + 'px' : '5px';
+                        })
+                    .style('fill', '#C17021')
+                    .attr('text-anchor', 'middle')
+                    .attr('class', 'label')
+                    .text(function(o) { return (o !== d) ? o.name.substr(0, 16) : ''; });
+
+                node.filter(function(o) {
+                        return o === d;
+                    })
+                    .append('name')
+                    .text(function(o) { return o.name; });
+            }
+        };
+    }
 });
