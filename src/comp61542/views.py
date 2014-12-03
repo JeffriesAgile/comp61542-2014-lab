@@ -1,5 +1,5 @@
 from string import replace
-from numpy.numarray.util import handleError
+# from numpy.numarray.util import handleError
 from comp61542 import app, mail, login_manager
 from database import database, models
 from visualization import network
